@@ -4,11 +4,10 @@
 * `Filtering data` means you are limiting the data vertically, that is the `number of rows`.
 
 To `limit the number of rows` based on some kind of search condition may include:
-    • View sales in a particular region
-    • Looking for customer names that start with a particular string combination
-    • List employees who left the company within the last year
+* View sales in a particular region
+* Looking for customer names that start with a particular string combination* List employees who left the company within the last year
 
-Example 1.4.1:
+### Example 1.4.1:
 Issue the following SQL statement using a WHERE clause: 
 
 Note the usage of the single quotes in the above example in the WHERE clause. You use single quotes as delimiters for enclosing string data, and double quotes as delimiters for database object names (identifiers). In most cases, you do not have to use double quotes for identifiers, try to avoid them for simplicity reasons.
@@ -48,9 +47,7 @@ Use the IS NULL predicate to determine whether a value expression evaluates to N
 
 
 
-
-
-Example 1.4.2:
+### Example 1.4.2:
 Issue the following SQL statement using a WHERE and an ORDER BY clause. 
 
 Note that in the previous example the comparison value was not enclosed in any delimiter. The following rules regarding delimiters in WHERE clauses apply:
