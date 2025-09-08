@@ -29,23 +29,23 @@ Note the usage of the single quotes in the above example in the WHERE clause. Yo
 The SQL standard defines the following five basic predicates in a WHERE clause:
 | Predicate | Description | 
 | :------- | :------: | 
-| Comparison:     | Use one of the six comparison operators to compare one value expression (column) against another value expression. The six comparison operators are:
+| Comparison: | Comparison operators to compare one value expression (column) against another value expression.
     • =	equals
     • <>, !=	not equal
     • <	less than
     • >	greater than
     • <=	less than or equal to
     • >= 	greater than or equal to  | 
-| Range:   | The Between predicate tests whether the value of a given value expression falls within a specified range of values. Specify the Between keyword followed by the beginning value of the range, then the And keyword followed by the ending value of the range.
+| Range: | The Between predicate tests whether the value of a given value expression falls within a specified range of values. Specify the Between keyword followed by the beginning value of the range, then the And keyword followed by the ending value of the range.
     • BETWEEN beginning_value AND ending_value   | 
-| Members     | Use the IN predicate to test a value expression against a list of values. List the values in the IN predicate separated by commas and enclose the entire list in parentheses.
+| Members | Use the IN predicate to test a value expression against a list of values. List the values in the IN predicate separated by commas and enclose the entire list in parentheses.
     • IN(comma-separated list of values)  | 
 | Pattern Match:   | The LIKE predicate allows you to test whether a character string value expression matches a specified character string pattern.
     • %	Zero, one or many arbitrary characters
     • _	One and only one arbitrary character   | 
 | Null: | Use the IS NULL predicate to determine whether a value expression evaluates to Null. Use NOT IS NULL to exclude nulls.
     • IS NULL
-    • IS NOT NULL  | 
+    • IS NOT NULL | 
 
 ### Example 1.4.2:
 Issue the following SQL statement using a WHERE and an ORDER BY clause. 
