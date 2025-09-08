@@ -48,10 +48,10 @@ Modify the previous example as follows:
 ```sql
 SELECT job_title, 'Minimum Salary=' AS StaticString, Min_Salary AS MinSalary
 FROM jobs;
-```
 
 # 19 rows expected
 ```
+
 As you can see from the example above, the column alias is expressed all in upper case. If you want to preserve the case or even include blank spaces in your column alias, then you must include the column alias in double quotation marks as shown in the next example.
 
 Example 1.2.4:
@@ -78,6 +78,7 @@ You cannot mix the asterisk character with any other columns or expressions list
 
 Example 1.2.5:
 Issue the following SELECT statement using the asterisk:
+
 ```sql
 SELECT *
 FROM countries;
