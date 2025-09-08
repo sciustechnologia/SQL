@@ -1,8 +1,9 @@
-## 1.4 `WHERE` Clause
+## 1.4 `WHERE` Clause `filtering data`. 
 
-Besides selecting and sorting data the next most important task is filtering data. Selecting data basically means you are limiting the data horizontally (the number of columns). Filtering data, on the other hand, means you are limiting the data vertically, that is the number of rows.
+* `Selecting data` basically means you are limiting the data horizontally (the `number of columns`). 
+* `Filtering data` means you are limiting the data vertically, that is the `number of rows`.
 
-In most select queries, you want to limit the number of rows based on some kind of search condition. Some very common request may include:
+To `limit the number of rows` based on some kind of search condition may include:
     • View sales in a particular region
     • Looking for customer names that start with a particular string combination
     • List employees who left the company within the last year
