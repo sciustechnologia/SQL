@@ -4,62 +4,72 @@
 * `Filtering data` means you are limiting the data vertically, that is the `number of rows`.
 
 To `limit the number of rows` based on some kind of search condition may include:
-* View sales in a particular region
-* Looking for customer names that start with a particular string combination* List employees who left the company within the last year
+    • View sales in a particular region
+    • Looking for customer names that start with a particular string combination
+    • List employees who left the company within the last year
 
 ### Example 1.4.1:
 Issue the following SQL statement using a WHERE clause: 
 
+```sql
+SELECT last_name, first_name, phone_number
+FROM employees
+WHERE last_name='Smith';
+```
+
 Note the usage of the single quotes in the above example in the WHERE clause. You use single quotes as delimiters for enclosing string data, and double quotes as delimiters for database object names (identifiers). In most cases, you do not have to use double quotes for identifiers, try to avoid them for simplicity reasons.
+
  WARNING: When using blank spaces or special characters other than alphanumeric and the underscore character, double quotes are required for delimiting the object name, such as a table or column name for example. Avoid this at all cost!
 
- Note: A good way to remember the difference between single and double quotes is the following: [S]ingle quotes are for [s]tring data. [D]ouble quotes are for [d]atabase object names.
-
-
+ > Note: 
+ A good way to remember the difference between single and double quotes is the following: 
+ * [S]ingle quotes are for [s]tring data. 
+ * [D]ouble quotes are for [d]atabase object names.
 
 The SQL standard defines the following five basic predicates in a WHERE clause:
-Predicate
-Description
-
-Comparison:
-Use one of the six comparison operators to compare one value expression (column) against another value expression. The six comparison operators are:
+| Predicate | Description | 
+| :------- | :------: | 
+| Comparison:     | Use one of the six comparison operators to compare one value expression (column) against another value expression. The six comparison operators are:
     • =	equals
     • <>, !=	not equal
     • <	less than
     • >	greater than
     • <=	less than or equal to
-    • >= 	greater than or equal to
-Range:
-The Between predicate tests whether the value of a given value expression falls within a specified range of values. Specify the Between keyword followed by the beginning value of the range, then the And keyword followed by the ending value of the range.
-    • BETWEEN beginning_value AND ending_value
-Membership:
-Use the IN predicate to test a value expression against a list of values. List the values in the IN predicate separated by commas and enclose the entire list in parentheses.
-    • IN(comma-separated list of values)
-Pattern Match:
-The LIKE predicate allows you to test whether a character string value expression matches a specified character string pattern.
+    • >= 	greater than or equal to  | 
+| Range:   | The Between predicate tests whether the value of a given value expression falls within a specified range of values. Specify the Between keyword followed by the beginning value of the range, then the And keyword followed by the ending value of the range.
+    • BETWEEN beginning_value AND ending_value   | 
+| Members     | Use the IN predicate to test a value expression against a list of values. List the values in the IN predicate separated by commas and enclose the entire list in parentheses.
+    • IN(comma-separated list of values)  | 
+| Pattern Match:   | The LIKE predicate allows you to test whether a character string value expression matches a specified character string pattern.
     • %	Zero, one or many arbitrary characters
-    • _	One and only one arbitrary character
-Null:
-Use the IS NULL predicate to determine whether a value expression evaluates to Null. Use NOT IS NULL to exclude nulls.
+    • _	One and only one arbitrary character   | 
+| Null: | Use the IS NULL predicate to determine whether a value expression evaluates to Null. Use NOT IS NULL to exclude nulls.
     • IS NULL
-    • IS NOT NULL
-
-
-
+    • IS NOT NULL  | 
 
 ### Example 1.4.2:
 Issue the following SQL statement using a WHERE and an ORDER BY clause. 
 
+```sql
+SELECT * 
+FROM departments
+WHERE department_id > 100
+ORDER BY department_id;
+```
+
 Note that in the previous example the comparison value was not enclosed in any delimiter. The following rules regarding delimiters in WHERE clauses apply:
-    • Comparison values used against character data type column must be enclosed in single quotes.
-    • Comparison values used against a number data type column does not need a delimiter.
-    • Comparison values used against a date/time data type column must be enclosed in single quotes.
+* Comparison values used against character data type column must be enclosed in single quotes.
+* Comparison values used against a number data type column does not need a delimiter.
+* Comparison values used against a date/time data type column must be enclosed in single quotes.
+
 The date/time field is unfortunately handled differently by the various database vendors, a main reason is how the date/time data is stored in the database. In Oracle, the default date format is:
-‘d-Mon-yy’ or ‘d-Mon-yyyy’. 
- WARNING: To avoid any further Y2K issues, I recommend using always the 4-digit format notation.
+**‘d-Mon-yy’ or ‘d-Mon-yyyy’**. 
+ 
+> WARNING: 
+To avoid any further Y2K issues, I recommend using always the 4-digit format notation.
 
 
-Example 1.4.3:
+### Example 1.4.3:
 Issue the following SQL statement using a WHERE clause having a Date data type: 
 
 As you can see, it does not matter whether the two or four digit year is used. Also lower or uppercase spelling of the month has the same effect. Lastly, you may use one or two digit format for days less than 10.
