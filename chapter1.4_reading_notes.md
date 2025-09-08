@@ -29,12 +29,7 @@ Note the usage of the single quotes in the above example in the WHERE clause. Yo
 The SQL standard defines the following five basic predicates in a WHERE clause:
 | Predicate | Description | 
 | :------- | :------: | 
-| Comparison: | Comparison operators to compare one value expression (column) against another value expression.
-* =	equals * <>, !=	not equal
-* <	less than
-* >	greater than
-* <=	less than or equal to
-* >= 	greater than or equal to | 
+| Comparison: | Comparison operators to compare one value expression (column) against another value expression. * =	equals * <>, !=	not equal * < less than * > greater than * <= less than or equal to * >= greater than or equal to | 
 | Range: | The Between predicate tests whether the value of a given value expression falls within a specified range of values. Specify the Between keyword followed by the beginning value of the range, then the And keyword followed by the ending value of the range.
     • BETWEEN beginning_value AND ending_value   | 
 | Members | Use the IN predicate to test a value expression against a list of values. List the values in the IN predicate separated by commas and enclose the entire list in parentheses.
