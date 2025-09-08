@@ -81,15 +81,19 @@ FROM employee
 WHERE hire_date = '7-June-1994';
 ```
 
-As you can see, it does not matter whether the two or four digit year is used. Also lower or uppercase spelling of the month has the same effect. Lastly, you may use one or two digit format for days less than 10.
+* it does not matter whether 
+  * the two or four digit year is used. 
+  * lower or uppercase spelling of the month. 
+* Lastly, you may use one or two digit format for days less than 10.
 
 > Note: 
 You may have noticed that Oracle displays a feedback statement after a SELECT statement, such as 25 rows selected. In the above example, it did not show this statement. When more than 5 rows are selected, Oracle issue the feedback statement, otherwise it leaves it out. Also, if no rows are returned as a result of a SQL statement, Oracle issues ‘no rows selected’ feedback statement.
 
 **Comparing value expressions**:
-It is easily understood when you compare numeric or even date/time values, but you must pay close attention when you compare character strings.  For example, are ‘Michael’ and ‘MICHAEL’ equal or are they different? And which one is smaller than the other? This really depends on the collating sequence of the database product, that is, how individual characters are sorted within a character set.
+It is easily understood when you compare numeric or even date/time values, but you must pay close attention when you compare character strings.  For example, are ‘Michael’ and ‘MICHAEL’ equal or are they different? And which one is smaller than the other? This really depends on the `collating sequence` of the database product, that is, how individual characters are sorted within a character set.
 
-Example 1.4.4:
+### Example 1.4.4:
+
 Issue the following SQL statements comparing characters: 
 
 ```sql
@@ -102,11 +106,12 @@ FROM regions
 WHERE 'a' = 'a';
 ```
 
-To figure out the collating sequence of the Oracle product, compare individual characters in the WHERE clause. If the condition in the WHERE clause is true then all rows are returned, if it is false, no rows are returned. This is a simple test as shown in the next example.
+To figure out the collating sequence of the Oracle product, compare individual characters in the `WHERE` clause. If the condition in the `WHERE` clause is true then all rows are returned, if it is false, no rows are returned. This is a simple test as shown in the next example.
 
 
 Example 1.4.4 (continued):
 Issue the following SQL statements to determine collating sequence of characters: 
+
 ```sql
 SELECT * 
 FROM regions
@@ -117,29 +122,40 @@ FROM regions
 WHERE '1' > 'A';
 ```
 
-The above example shows that the first WHERE clause results in a Boolean True, otherwise we would not have received any rows back from the database. That, in turn, means that the character 1 comes before the uppercase character A in the character set. When you reverse the relational operator, then no rows are returned. In this case, the condition in the WHERE clause yields a Boolean false.
+* the first `WHERE` clause results in a Boolean True, otherwise we would not have received any rows back from the database. That, in turn, means that the character 1 comes before the uppercase character A in the character set. When you reverse the relational operator, then no rows are returned. In this case, the condition in the `WHERE` clause yields a Boolean false.
 
-In the next examples we will use the inequality operator.
+In the next examples we will use the `inequality operator`.
 	
 Example 1.4.5:
 Issue the following SQL statement using the inequality operator in the WHERE clause:
  ```sql
-SELECT 
+SELECT employee_id, last_name, first_name
+FROM employees
+WHERE last_name <> 'Smith';
+
+# Expected result 105 rows selected.
 ```
 
- Note: Instead of the operator <> you could also use the other inequality operator != in the above example.
+> Note: 
+ Instead of the operator `<>` you could also use the other inequality operator `!=` in the above example.
 
 
 Example 1.4.6:
 Issue the following SQL statement using a Date column and the inequality operator: 
   ```sql
-SELECT 
+SELECT employee_id, last_name, first_name, hire_date
+FROM employees
+WHERE hire_date != '7-Jun-94';
+
+# Expected result 103 rows selected.
 ```
 
 Example 1.4.7:
 Issue the following SQL statement using the greater than operator: 
  ```sql
-SELECT 
+SELECT job_title, min_salary
+FROM jobs
+Where min_salary >1000;
 ```
 
 Example 1.4.8:
