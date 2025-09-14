@@ -10,7 +10,7 @@ WHERE manager_id IS NULL;
 
 ### Xplanation
 
-**not having a manager assigned** I read it as a `NULL` value (represents an unknown or missing value). 
+**not having a manager assigned** means an unknown or missing value - a `NULL` value. 
 * We are not looking for zero (0) or an empty string (''), therefore standard comparison operators (`=` or `!=`) don't apply.
 * `IS NULL` or `IS NOT NULL` operators
     * `IS NULL` checks if a column's value is missing.
