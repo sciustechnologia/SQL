@@ -1,6 +1,6 @@
 ### Problem 1:
-Display employees (first_name, last_name, salary, manager_id) not having a manager assigned.
-Deliverables: One query
+* Display employees (first_name, last_name, salary, manager_id) not having a manager assigned.
+* Deliverables: One query
 
 ```SQL
 SELECT first_name, last_name, salary, manager_id
@@ -48,7 +48,7 @@ ORDER BY job_id ASC, salary DESC;
 
 ### Problem 3: ISSUE
 * Display employees (last_name, salary, job_id, hire_date) that were hired after December 31, 1999. Order the resulting data set by hire_date in ascending order.
-Deliverables: One query
+* Deliverables: One query
 
 ```SQL
 SELECT last_name, salary, job_id, hire_date
