@@ -84,8 +84,9 @@ The ORDER BY clause sorts the result set in two ways:
 ***
 
 ### Problem 5:
-Display employees (last_name , first_name, salary) having the lower case letter e in the 3rd position of the last_name and a total length of last_name of 6 characters. Order the resulting dataset by salary in descending order.
-Deliverables: One query
+* Display employees (last_name , first_name, salary) having the lower case letter e in the 3rd position of the last_name and a total length of last_name of 6 characters. 
+* Order the resulting dataset by salary in descending order.
+* Deliverables: One query
 
 ```SQL
 SELECT last_name, first_name, salary
@@ -94,28 +95,26 @@ WHERE last_name LIKE '__e___'
 ORDER BY salary DESC;
 ```
 
-### xplanation
-LIKE: This operator is used for pattern matching. It's often used in the WHERE clause to search for a specified pattern in a column.
 
-Wildcards: The LIKE operator uses two special wildcard characters:
+### Xplanation
+* **LIKE**:
+  * pattern matching (often used in the WHERE clause to search for a specified pattern in a column).
 
-_ (Underscore): Matches any single character.
+* **Wildcards**:
+  * The LIKE operator uses two special wildcard characters:
+    * `_` (Underscore): Matches any single character.
+    * `%` (Percent sign): Matches any sequence of zero or more characters.
 
-% (Percent sign): Matches any sequence of zero or more characters.
+* **last_name LIKE '__e___'**:
+  * The pattern that filters the results.
+  * The first `_` matches the first character.
+  * The second `_` matches the second character.
+  * The `e` matches a literal lowercase 'e' in the third position.
+  * The three remaining `_`'s match the fourth, fifth, and sixth characters.
 
-last_name LIKE '__e___': This is the pattern that filters the results.
+> The last_name has exactly six characters and the third character is an 'e'.
 
-The first _ matches the first character.
-
-The second _ matches the second character.
-
-The e matches a literal lowercase 'e' in the third position.
-
-The three remaining _'s match the fourth, fifth, and sixth characters.
-
-This pattern ensures that the last_name has exactly six characters and the third character is an 'e'.
-
-
+***
 
 ### Problem 6:
 Display employees (last_name , first_name, salary, department_id) not working in department 80. Order the resulting dataset by department_id and last_name. (Hint: Query the number of employees in department 80, and note that there are a total of 107 employees in the employees table. Your result should be total number minus employees in department 80)
