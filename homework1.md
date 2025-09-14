@@ -12,7 +12,8 @@ WHERE manager_id IS NULL;
 
 **not having a manager assigned** I read it as A NULL value 
 * represents an unknown or missing value. 
-* NULL is not the same as zero (0) or an empty string ('') - you cannot use standard comparison operators like = or != with NULL. Instead use the special IS NULL or IS NOT NULL operators.
+* NULL is not the same as zero (0) or an empty string ('') - standard comparison operators `=` or `!=` with NULL don't apply.
+* Using therefore `IS NULL` or `IS NOT NULL` operators.
 
 > a) IS NULL: Checks if a column's value is missing.
 > b) IS NOT NULL: Checks if a column's value is present.
