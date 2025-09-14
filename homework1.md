@@ -16,7 +16,7 @@ WHERE manager_id IS NULL;
     * `IS NULL` checks if a column's value is missing.
     * `IS NOT NULL` checks if a column's value is present.
 
-* **`WHERE` manager_id IS NULL**
+* **`WHERE manager_id IS NULL`**
   * filters the employees table to return only the rows where the value in the manager_id column is `NULL`, identifying employees who do not have a manager assigned.
 
 ***
