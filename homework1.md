@@ -42,9 +42,8 @@ ORDER BY job_id ASC, salary DESC;
   * The database first sorts all rows based on the values in the job_id column in ascending order (A-Z, 0-9) and `ASC` is the default behavior, so you can omit it - including for clarity.
 
 * **salary DESC**:
-  * After the initial sort by job_id, the database then sorts any rows that have the same job_id based on the salary column in descending order (highest to lowest). This is the secondary sort key.
-
-All employees with the same job are grouped together, and within each job group, they are sorted from the highest-paid to the lowest-paid.
+  * First sort by job_id, then sort any rows that have the same job_id based on the salary column in descending order (secondary sort key).
+  * All employees with the same job are grouped together, and within each job group, they are sorted from the highest-paid to the lowest-paid.
 
 ***
 
@@ -58,6 +57,8 @@ FROM employees
 WHERE hire_date > '1999-12-31'
 ORDER BY hire_date ASC;
 ```
+
+***
 
 ### Problem 4:
 Display employees (last_name, first_name, hire_date, salary) having their salary in the range of 10,000 and 20,000 (border values included). Order the resulting data set by salary descending and last_name ascending.
