@@ -133,7 +133,7 @@ ORDER BY department_id, last_name;
 
 ### Problem 7:
 * Display employee_id, department_id from table job_history and sort it by employee_id, department_id. 
-* Then show only the unique values of employee_id and department_id contained in table job_history sorted by employee_id.
+* Then show only the **unique** values of `employee_id` and `department_id` contained in table `job_history` sorted by `employee_id`.
 * Deliverables: Two queries
 
 ```SQL
