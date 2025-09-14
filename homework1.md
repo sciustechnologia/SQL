@@ -117,8 +117,10 @@ ORDER BY salary DESC;
 ***
 
 ### Problem 6:
-Display employees (last_name , first_name, salary, department_id) not working in department 80. Order the resulting dataset by department_id and last_name. (Hint: Query the number of employees in department 80, and note that there are a total of 107 employees in the employees table. Your result should be total number minus employees in department 80)
-Deliverables: One query
+* Display employees (last_name , first_name, salary, department_id) not working in department 80. Order the resulting dataset by department_id and last_name.
+* (Hint: Query the number of employees in department 80, and note that there are a total of 107 employees in the employees table.
+  * Your result should be total number minus employees in department 80)
+* Deliverables: One query
 
 ```SQL
 SELECT last_name, first_name, salary, department_id
@@ -127,10 +129,12 @@ WHERE department_id <> 80
 ORDER BY department_id, last_name;
 ```
 
+***
+
 ### Problem 7:
-Display employee_id, department_id from table job_history and sort it by employee_id, department_id. 
-Then show only the unique values of employee_id and department_id contained in table job_history sorted by employee_id.
-Deliverables: Two queries
+* Display employee_id, department_id from table job_history and sort it by employee_id, department_id. 
+* Then show only the unique values of employee_id and department_id contained in table job_history sorted by employee_id.
+* Deliverables: Two queries
 
 ```SQL
 SELECT employee_id, department_id
@@ -140,9 +144,4 @@ ORDER BY employee_id, department_id;
 SELECT DISTINCT employee_id, department_id
 FROM job_history
 ORDER BY employee_id;
-```
-
-
-```SQL
-
 ```
