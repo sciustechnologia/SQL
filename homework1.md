@@ -14,10 +14,12 @@ WHERE manager_id IS NULL;
 * represents an unknown or missing value. 
 * NULL is not the same as zero (0) or an empty string ('') - you cannot use standard comparison operators like = or != with NULL. Instead use the special IS NULL or IS NOT NULL operators.
 
-a) IS NULL: Checks if a column's value is missing.
-b) IS NOT NULL: Checks if a column's value is present.
+> a) IS NULL: Checks if a column's value is missing.
+> b) IS NOT NULL: Checks if a column's value is present.
 
-**`WHERE` manager_id IS NULL** filters the employees table to return only the rows where the value in the manager_id column is NULL, effectively identifying employees who do not have a manager assigned.
+**`WHERE` manager_id IS NULL** filters the employees table to return only the rows where the value in the manager_id column is `NULL`, effectively identifying employees who do not have a manager assigned.
+
+***
 
 ### Problem 2:
 Display employees (first_name, last_name, salSELECT first_name, last_name, salary, manager_id
@@ -32,13 +34,19 @@ ORDER BY job_id ASC, salary DESC;
 ```
 
 ### Xplanation
-The ORDER BY clause in SQL is used to sort the result set of a query. When you need to sort by more than one column, you list the columns in the order you want the sorting to be applied.
 
-ORDER BY job_id ASC: The database first sorts all rows based on the values in the job_id column in ascending order (A-Z, 0-9). ASC is the default behavior, so you can omit it, but it's good practice to include it for clarity.
+* `ORDER BY` clause sorts the result set of a query. 
+  * to sort by more than one column, you list the columns in the order you want the sorting to be applied.
 
-, salary DESC: After the initial sort by job_id, the database then sorts any rows that have the same job_id based on the salary column in descending order (highest to lowest). This is the secondary sort key.
+* **ORDER BY job_id ASC**:
+  * The database first sorts all rows based on the values in the job_id column in ascending order (A-Z, 0-9) and `ASC` is the default behavior, so you can omit it - including for clarity.
 
-This ensures that all employees with the same job are grouped together, and within each job group, they are sorted from the highest-paid to the lowest-paid.
+* **salary DESC**:
+  * After the initial sort by job_id, the database then sorts any rows that have the same job_id based on the salary column in descending order (highest to lowest). This is the secondary sort key.
+
+All employees with the same job are grouped together, and within each job group, they are sorted from the highest-paid to the lowest-paid.
+
+***
 
 ### Problem 3: ISSUE
 Display employees (last_name, salary, job_id, hire_date) that were hired after December 31, 1999. Order the resulting data set by hire_date in ascending order.
