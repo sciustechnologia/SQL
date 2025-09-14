@@ -10,12 +10,11 @@ WHERE manager_id IS NULL;
 
 ### Xplanation
 
-**not having a manager assigned** I read it as A NULL value 
-* represents an unknown or missing value. 
-* NULL is not the same as zero (0) or an empty string ('') - standard comparison operators (`=` or `!=`) don't apply.
-* Using therefore `IS NULL` or `IS NOT NULL` operators.
-    * **IS NULL** checks if a column's value is missing.
-    * **IS NOT NULL** checks if a column's value is present.
+**not having a manager assigned** I read it as a `NULL` value (represents an unknown or missing value). 
+* We are not looking for zero (0) or an empty string (''), therefore standard comparison operators (`=` or `!=`) don't apply.
+* `IS NULL` or `IS NOT NULL` operators
+    * `IS NULL` checks if a column's value is missing.
+    * `IS NOT NULL` checks if a column's value is present.
 
 * **`WHERE` manager_id IS NULL**
   * filters the employees table to return only the rows where the value in the manager_id column is `NULL`, identifying employees who do not have a manager assigned.
