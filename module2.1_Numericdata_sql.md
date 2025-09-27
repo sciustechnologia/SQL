@@ -79,56 +79,59 @@ Issue the following SQL statement using the `ROUND` function:
 
 ```SQL
 SELECT ROUND(2565.526,2) AS Round2, ROUND (2565.526,0) AS ROUND0, ROUND (2565.526,-2) AS "ROUND-2"
+FROM dual;
 ```
 
 **Truncation function** `trunc(n,d)`
-The trunc  or truncate function simply drops the digits without rounding. The decimal d can again be positive, negative or zero. If the number truncated is five or higher, it is still dropped without rounding the next digit up.
+* The `TRUNC`  or truncate function simply **drops the digits without rounding**. 
+* The decimal d can again be positive, negative or zero. 
+* If the number truncated is five or higher, it is still dropped without rounding the next digit up.
 
-Example 2.1.2:
+### Example 2.1.2:
 Issue the following SQL statement using the TRUNC function: 
+
+```SQL
+SELECT TRUNC(2565.526,2) AS TRUNC2, TRUNC (2565.526,0) AS TRUNC0, TRUNC (2565.526,-2) AS "TRUNC-2"
+FROM dual;
+```
 
 ### Vendor-Specific Numeric Functions
 Below a list of selected numeric functions in Oracle:
-Function Description
-AVG(column_name)
-Returns the average of a column of numbers
-Count(column_name)
-Returns the number of rows returned by a query
-GREATEST(value1, value2, …)
-Returns the largest of multiple values
-LEAST(value1, value2, …)
-Returns the smallest of multiple values
-MAX(column_name)
-Returns the maximum value of a column of numbers
-MEDIAN(column_name)
-Returns the median (middle value) of a column of numbers
+
+| Function  | Description | 
+|-----------------|---------------|
+| AVG(column_name)  |  Returns the average of a column of numbers  | 
+| Count(column_name)   |  Returns the number of rows returned by a query  | 
+ |GREATEST(value1, value2, …)  |  Returns the largest of multiple values  | 
+| LEAST(value1, value2, …)  |  Returns the smallest of multiple values  | 
+| MAX(column_name)  | Returns the maximum value of a column of numbers   | 
+| MEDIAN(column_name)   | Returns the median (middle value) of a column of numbers   | 
 
 
-Function
-Description
-MIN(column_name)
-Returns the minimum value of a column of numbers
-NVL(value_eval, value_returned)
-Returns a value if the value_eval is null
-ROUND(value, integer)
-Returns a value rounded to number of integer of places
-STDDEV(column_name)
-Returns the standard deviation of numbers in a column
-SUM(column_name)
-Returns the sum of numbers in a column
-TRUNC(value, decimal_places)
-Returns a number truncated to the specified number of decimal places
-VARIANCE(column_name)
-Returns the variance of numbers in a column
+
+| Function  | Description | 
+|-----------------|---------------|
+| MIN(column_name)  |  Returns the minimum value of a column of numbers  | 
+| NVL(value_eval, value_returned)   |  Returns a value if the value_eval is null  | 
+| ROUND(value, integer)   |  Returns a value rounded to number of integer of places | 
+| STDDEV(column_name) | Returns the standard deviation of numbers in a column  | 
+| SUM(column_name)   |  Returns the sum of numbers in a column  | 
+| TRUNC(value, decimal_places) | Returns a number truncated to the specified number of decimal places  | 
+| VARIANCE(column_name)  | Returns the variance of numbers in a column   | 
 
 
-Many of these functions are vendor functions, that is, not part of the standard SQL functions. 
-However, many database vendors use the same or similar functions. 
-But always check the documentation for the database product to inform yourself about the usage of a particular function.
+* Many of these functions are vendor functions, that is, not part of the standard SQL functions. 
+* However, many database vendors use the same or similar functions. 
+* But always check the documentation for the database product to inform yourself about the usage of a particular function.
 
 ### Example 2.1.3 `AVG` function: 
 
-The above example calculates the average of the `min_salary` column in the `jobs` table.
+* calculates the average of the `min_salary` column in the `jobs` table.
+
+```SQL
+SELECT AVG(min_salary)
+FROM jobs;
+```
 
 > WARNING: 
 * The **aggregate functions** – `COUNT`, `SUM`, `AVG`, `MAX`, and `MIN` – do not handle `NULL` in the same way as ordinary functions and operators. 
