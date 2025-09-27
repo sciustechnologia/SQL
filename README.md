@@ -2,11 +2,11 @@
 UC Berkeley course notes
 
 ### Lecture 1
-* Topic 1.1: Overview of SQL
-* Topic 1.2: The SELECT Statement
-* Topic 1.3: ORDER BY Clause
-* Topic 1.4: WHERE Clause
-* Topic 1.5: Concept of Null
+* Topic 1.1: [Overview of SQL](chapter1.1_reading_notes.md)
+* Topic 1.2: [The SELECT Statement]()
+* Topic 1.3: [ORDER BY Clause]()
+* Topic 1.4: [WHERE Clause]()
+* Topic 1.5: [Concept of Null]()
     
 ### Lecture 2
 * Topic 2.1: [Numeric Data in SQL](module2.1_Numericdata_sql.md)
