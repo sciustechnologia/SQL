@@ -20,15 +20,6 @@ Furthermore, some database vendors add their own numeric extensions, such as the
   * The **scales** is a nonnegative integer that indicates `how many decimal places the number has`.
 ### exact numeric types
 > The data types `Numeric`, `Decimal`, `Integer`, `BigInt` and `SmallInt` are exact numeric types.
-**Decimal (p,s)**
-* use decimal precision for rounding, based on the total number of digits defined by the scale value. The length is equal to the defined presion p plus 1 (for the decimal point) if scale is greater then . The decimal portion is exactly the size denined but the scale.
-Numeric (p,s)
-Integer (p)
-* whole numbers only, scale of zero. Minimum and Maximum precision based on manufacturer.
-BigIntWhole numbers 
-* whole only, scale of zero. Minimum precision greater than integer (for 64-bit systems)
-SmallInt 
-* whole numbers only, scale of zero. Minimum and Maximum precision based on manufacturer.
 
 * **approximate** numeric value consists of a `mantissa` and an `exponent`. 
 * **exponent** is a signed integer specifying the `magnate of the mantissa`. 
@@ -37,40 +28,44 @@ SmallInt
 * The value of an approximate numeric value is the mantissa multiplied by 10 to the exponent. 
 * `Float (p)`, `Real`, and `Double Precision` are the **approximate numeric types**. 
 
-
-
-
 There is a difference between Float (p) and the Real type. 
-* The **Float (p)** type has a `precision equal to or greater than the value p`, whereas 
+* **Float (p)** type has a `precision equal to or greater than the value p`, whereas 
 * **Real** has a `database vendor specific precision`.
 
 List of all the numeric types and their definitions:
 
 ### Exact numeric types:
 
-Decimal (p,s)
-Uses decimal precision for rounding, based on the total number of digits defined by the scale (s) value. The length is equal to the defined precision p plus 1 (for the decimal point) if scale is greater than 0. The decimal portion is exactly the size defined by the scale (s).
-Numeric(p,s)
-Very similar to decimal. The only difference is that the decimal portion is at least the size of the scale (s) indicated, but expandable up to a limit set by the database vendor.
-Integer(p)
-Whole numbers only, scale (s) of zero. Minimum and maximum precision based on manufacturer
-BigInt
-Whole numbers only, scale (s) of zero. Minimum precision greater than Integer (for 64-bit systems)
-SmallInt
-Whole numbers only, scale (s) of zero. Minimum and maximum precision based on manufacturer
+**Decimal (p,s)**
+* use decimal precision for rounding, based on the total number of digits defined by the scale value. The length is equal to the defined presion p plus 1 (for the decimal point) if scale is greater then . The decimal portion is exactly the size denined but the scale.
+**Numeric (p,s)**
+* Similar to decimal; the onley difference is that decimal portion is at least the size of the scale(s) indicated, but expandable up to the limit set by the database vendor
+**Integer (p)**
+* whole numbers only, scale of zero. Minimum and Maximum precision based on manufacturer.
+**BigInt**
+* Whole numbers only, scale of zero. Minimum precision greater than integer (for 64-bit systems)
+**SmallInt**
+* whole numbers only, scale of zero. Minimum and Maximum precision based on manufacturer.
 
 
 ### Approximate numeric types:
-Float (p)
-Precision value represents minimum size used, up to the manufacturer’s maximum. Value may be represented in an exponential format, for example 10.5 E-13. Rounding and truncating is defined by the manufacturer.
-Real
-Has a default precision that must be less than that set for Double Precision.
-Double Precision
-Has a default precision that must be greater than that set for Real.
+
+**Float (p)**
+* Precision value represents minimum size used, up to the manufacturer’s maximum. 
+* Value may be represented in an exponential format, for example 10.5 E-13. 
+* Rounding and truncating is defined by the manufacturer.
+
+**Real**
+* Has a default precision that must be less than that set for Double Precision.
+
+**Double Precision**
+* Has a default precision that must be greater than that set for Real.
 
 ### Numeric Type Conversion
 
-Rounding is a process that is almost always necessary. It either happens automatically when different numeric data types are assigned to each other or when a numeric value is stored into a column of a table. The following functions are Oracle functions and not part of the Standard SQL.
+* It either happens automatically when different numeric data types are assigned to each other or when a numeric value is stored into a column of a table. 
+
+The following functions are Oracle functions and not part of the Standard SQL.
 
 **Round function**: `round(n,d)`
 The round function rounds a number n to the specified decimal d. The decimal d can be positive, negative or zero. If the decimal is positive, then the number is rounded to that many decimal points. The number five rounds up. If d is zero, then the number is rounded to no decimal points. If d is negative, then the number will have no decimal points and it will be rounded to the d digits to the left of the decimal point.
