@@ -9,13 +9,15 @@ UC Berkeley course notes
 * Topic 1.5: Concept of Null
     
 ### Lecture 2
-    • Topic 2.1: Numeric Data in SQL
-    • Topic 2.2: Temporal Data in SQL
-    • Topic 2.3: Character Data in SQL
+• Topic 2.1: [Numeric Data in SQL](module2.1_Numericdata_sql.md)
+• Topic 2.2: Temporal Data in SQL
+• Topic 2.3: Character Data in SQL
+
 ### Lecture 3
     • Topic 3.1: Complex Filtering of Data
     • Topic 3.2: SQL Expressions
     • Topic 3.3: Intersect, Difference, Union of Sets
+
 ### Lecture 4
     • Topic 4.1: Using Multiple Tables: Joins
     • Topic 4.2: Inner Joins
