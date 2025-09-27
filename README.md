@@ -9,9 +9,9 @@ UC Berkeley course notes
 * Topic 1.5: Concept of Null
     
 ### Lecture 2
-• Topic 2.1: [Numeric Data in SQL](module2.1_Numericdata_sql.md)
-• Topic 2.2: Temporal Data in SQL
-• Topic 2.3: Character Data in SQL
+* Topic 2.1: [Numeric Data in SQL](module2.1_Numericdata_sql.md)
+* Topic 2.2: Temporal Data in SQL
+* Topic 2.3: Character Data in SQL
 
 ### Lecture 3
     • Topic 3.1: Complex Filtering of Data
