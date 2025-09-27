@@ -68,9 +68,18 @@ List of all the numeric types and their definitions:
 The following functions are Oracle functions and not part of the Standard SQL.
 
 **Round function**: `round(n,d)`
-The round function rounds a number n to the specified decimal d. The decimal d can be positive, negative or zero. If the decimal is positive, then the number is rounded to that many decimal points. The number five rounds up. If d is zero, then the number is rounded to no decimal points. If d is negative, then the number will have no decimal points and it will be rounded to the d digits to the left of the decimal point.
-Example 2.1.1:
-Issue the following SQL statement using the ROUND function: 
+* The round function rounds a number `n` to the specified decimal `d`. 
+* The decimal `d` can be positive, negative or zero. If the decimal is positive, then the number is rounded to that many decimal points. 
+* The number `five` rounds up. 
+* If `d` is `ZERO`, then the number is rounded to no decimal points. 
+* If `d` is negative, then the number will have no decimal points and it will be rounded to the `d` digits to the left of the decimal point.
+
+### Example 2.1.1:
+Issue the following SQL statement using the `ROUND` function: 
+
+```SQL
+SELECT ROUND(2565.526,2) AS Round2, ROUND (2565.526,0) AS ROUND0, ROUND (2565.526,-2) AS "ROUND-2"
+```
 
 **Truncation function** `trunc(n,d)`
 The trunc  or truncate function simply drops the digits without rounding. The decimal d can again be positive, negative or zero. If the number truncated is five or higher, it is still dropped without rounding the next digit up.
