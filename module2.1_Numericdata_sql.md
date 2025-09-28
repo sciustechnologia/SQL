@@ -134,7 +134,7 @@ FROM jobs;
 > WARNING: 
 * The **aggregate functions** – `COUNT`, `SUM`, `AVG`, `MAX`, and `MIN` – do not handle `NULL` in the same way as ordinary functions and operators. 
 * Instead of returning `NULL` as soon as a `NULL operand` is encountered, **they only take non-NULL fields into consideration** while computing the outcome.
-
+* The `COUNT(*)` function counts all rows in a table or a query's result set, including those with `NULL` values. It's the standard way to get the total number of records in a table.
 
 ### Example 2.1.4: using the COUNT function: 
 
@@ -248,7 +248,6 @@ The **GREATEST** function
 SELECT department_name, NVL(TO_CHAR(manager_id), 'No Manager') AS manager
 FROM departments
 ORDER BY manager;
-
 ```
 
 * Without the `TO_CHAR ` function an error would occur. 
@@ -269,8 +268,6 @@ ORDER BY manager;
 
 Error message: invalid number refers to the `manager_id`.
 
-***
-
 Using the **NVL2** function you cannot not only replace the `NULL` value, but also the non-null value with a different value.
 
 ### Example 2.1.12: using the NVL2 function:
@@ -289,6 +286,8 @@ FROM departments;
 SELECT STDEV(min_salary) "Stanadard DEv", VARIANCE(min_salary) "Variance"
 FROM jobs;
 ```
+
+***
 
 ### 1. What is the difference between COUNT(*) and COUNT(column)
 * COUNT(*): Counts every row, regardless of whether any columns contain NULL values.
