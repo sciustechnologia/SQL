@@ -243,11 +243,17 @@ The **GREATEST** function
 * Then the Max function takes the highest value in that one column for all years.
 
 ### Example 2.1.10: using the `NVL` function: 
-```SQL
-SELECT 
 
- WARNING: 
- * The **to_char** function is necessary here to **convert the manager_id column into a character column** since the substitute for a null value is ‘No Manager’ which is a character data type. The function NVL provides two values for one column, and it must be of the same data type. 
+```SQL
+SELECT department_name, NVL(TO_CHAR(manager_id), 'No Manager') AS manager
+FROM departments
+ORDER BY manager;
+
+```
+
+ > WARNING: 
+ * The **to_char** function is necessary here to **convert the manager_id column into a character column** since the substitute for a null value is ‘No Manager’ which is a character data type. 
+ * The function `NVL` provides two values for one column, and it must be of the same data type. 
 
 ### Example 2.1.11:
 Without the `to_char ` function the following error would be generated:
