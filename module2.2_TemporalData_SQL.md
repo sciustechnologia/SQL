@@ -64,17 +64,6 @@ AM or PM
 * If a year is given in a two-digit format and if the year is **between 50 and 99**, the year is prepended with 19, otherwise it is prepended with 20.
 
 
-
-
-| Day  | Month | Year   | Hour   | Minute   | Seconds |
-|-------|-----|----------|----------|----------|----------|
-|  |   |   |  |    |   |
-|    |   |   |  |    |   |
-|  |   |   |  |    |   |
-|    |   |   |  |    |   |
-|  |   |   |  |    |   |
-
-
 ### TO_CHAR: SUFFIXES and Prefix
 
 * Suffixes for Number Display
@@ -107,38 +96,78 @@ Image here
 ### Example 2.2.1: using the TO_CHAR function to format date values:
 
 ```SQL
+SELECT sysdate FROM dual;
 
+SELECT TO_CHAR(sysdate, 'mm/dd/yyy hh24:mi:ss' Formatted_Date 
+FROM dual;
+
+SELECT TO_CHAR(sysdate, 'FmMonth DDTHSP, YYYY' )
+FROM dual;
 ```
+
+* `sysdate` is the time on the databe server, which might be in a different time zone. 
+* `CURRENT_DATE` works with time-zone and is the date/time on the client computer. 
+* `SYSDATE` is always the database server date/time. Change 4 time zones  west of GMT (east coast)
 
 ### Example 2.2.2:  using the Current_Date and Sysdate functions:
 
 ```SQL
+SELECT TO_CHAR(CURRENT_DATE, 'mm-dd-yyy hh12:Mi:ss' CURRENT_DATE 
+FROM dual;
 
+SELECT TO_CHAR(SYSDATE, 'mm-dd-yyy hh12:Mi:ss' CURRENT_DATE 
+FROM dual;
+
+ALTER SESSION SET TIME_ZONE = 'America/New York';
+
+SELECT TO_CHAR(CURRENT_DATE, 'mm-dd-yyy hh12:Mi:ss' CURRENT_DATE 
+FROM dual;
+
+SELECT TO_CHAR(SYSDATE, 'mm-dd-yyy hh12:Mi:ss' CURRENT_DATE 
+FROM dual;
 ```
 
-Current_Date works with time-zone and is the date/time on the client computer. Sysdate is always the database server date/time. Change 4 time zones  west of GMT (east coast)
+***
 
+## GREATEST, LEAST, MIN, MAX
 
 ### Example 2.2.3: using the GREATEST and LEAST functions: 
 
 ```SQL
-
+SELECT start_date, end_date, GREATEST(start_date. end_date) Greattest, LEAST(start_date. end_date) 
+FROM job_history;
 ```
 
 
 ### Example 2.2.4: using the MIN and MAX aggregate functions:
 
 ```SQL
-
+SELECT MIN(hire_date)  First_Hire, MAX(hire_date) Last_hire
+FROM employees;
 ```
+
+## ROUND, TRUNC
 
 ### Example 2.2.5: using the ROUND function: 
 
 ```SQL
+SELECT TO_CHAR(ROUND(TO_DATE('4-jun-06'), 'Year'),'Month-dd/yyy') Last_New_Year
+FROM dual;  
 
+SELECT TO_CHAR(ROUND(TO_DATE('4-jul-06'), 'Year'),'Month-dd/yyy') Last_New_Year
+FROM dual;  
+
+SELECT TO_CHAR(ROUND(TO_DATE('4-jun-06'), 'Month'),'Month-dd/yyy') FIRST_of_thisMonth
+FROM dual;  
 ```
 
+* rounds the entire year back to -01/2006
+
 ### Example 2.2.6: using the TRUNC function: 
+
+```SQL
+SELECT TO_CHAR(TRUNC(SYSDATE), 'dd-mm-yyyy hh:mi:ss pm') AS Trund_date FFROM dual;
+```
 
 * The `TRUNC` function used on date/time values removes the time portion of a date/time value (if no number of decimal parameter is specified). 
 * A date value without a time component is set to midnight.
@@ -146,5 +175,8 @@ Current_Date works with time-zone and is the date/time on the client computer. S
 > Note: 
 * In the above example, pm was used in the format as an am/pm indicator. However, am was displayed as this is the current part of the day since we are displaying a midnight time.
 
+1. What does the default Date/Time format look like in Oracle?
+2. What is the diffeence between Current_date and Sysdate functions?
+3. Besides date/tome value, what else do you need to properly display or store the date/time value in the database?
 
 
