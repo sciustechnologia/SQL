@@ -2,152 +2,143 @@
 
 ### The Calendar
 
-The calendar year has more than 365 days, 365.2522 to be exact. Over time, the calendar did not align anymore with the seasons and the farmers were using the starts to accurately predict the seasons, the flooding of the river Nile for example. Therefore, the **Julian calendar** added the additional **leap day every four years to account for the fraction**. 
+* The calendar year has more than 365 days, 365.2522 to be exact. 
+* Over time, the calendar did not align anymore with the seasons and the farmers were using the starts to accurately predict the seasons, the flooding of the river Nile for example. Therefore, the **Julian calendar** added the additional **leap day every four years to account for the fraction**. 
 
 However, the 0.0022 fraction still adds up over time, and in 1582 had gotten 10 days out of sync with the seasons. Finally, scientist had convinced Pope Gregory to drop almost two weeks in October of the year of 1582. That was a big deal, even at that time! Some countries did not follow right away, they adopted the change in calendar later on.
 
-The abbreviations A.D. (Anno Domino, latin for “in the year of Our Lord”) and B.C (before Christ) have been replaced by C.E. (common era) and B.C.E. (before common era) in the ISO standard to avoid religious references.
+The abbreviations A.D. (Anno Domino, latin for “in the year of Our Lord”) and B.C (before Christ) have been replaced by `C.E. (common era)` and `B.C.E. (before common era)` in the ISO standard to avoid religious references.
 
-To complicate things, the beginning of the year also **varied from country to country**. Great Britain preferred to begin the year on March 25, while other countries began at Easter, December 25, or March 1, and of course January 1.
-
+The year also **varied from country to country**. Great Britain preferred to begin the year on March 25, while other countries began at Easter, December 25, or March 1, and of course January 1.
 Until fairly recently, no one agreed on the proper display format for dates. For example, 12/16/95 in Boston is 16/12/95 in London, and 16.12.95 in Berlin and 95-12-16 in Stockholm.
 
 Faced with all the various possibilities, software vendors came up with various general ways of formatting dates for display. The usual ones are some mixtures of two or four-digit year, a three letter or two-digit month and a two digit day within the month.Slashes, dashes or spaces can separate the three parts of a date.
 
 Today’s standard format is the “yyyy-mm-dd” format that is part of the SQL standard.
-The timestamp format can be either local time or UTC/GMT time.
+The timestamp format can be either `local time` or `UTC/GMT time`.
 Furthermore, daylight savings time makes matters more complicated, and up to today there is no general agreement how to handle this in the SQL standard. A date without a time zone is ambiguous in an international system, for example.
 
-### SQL Temporal Data Types: Date, Time. Timestamp
+***
+
+### SQL **Temporal Data Types**: Date, Time. Timestamp
 
 * All SQL databases have a **date data type**, and then most have a separate time and **timestamp data type**. 
-* Furthermore, the SQL standard also has the **Interval data type**, that is, Day, Hour, Minute and Seconds. 
+* SQL standard also has the **Interval data type**, that is, Day, Hour, Minute and Seconds. 
 * Both of these data types are temporal data types, but 
   * `date/time` represents a point in time, whereas 
   * the `Interval` are durations of time.
 
 * **Standard SQL** has a full set of operators for all these data types, the full syntax and functionality have not yet been implemented in any SQL product, particularly since many **database vendors came up with their own extension long before there was a standard**.
 
-The following table lists the most important date/time functions. Again, many of these functions are vendor specific, however, similar functions exist in the other database products.
+The following table lists the most important `date/time` functions. Again, many of these functions are vendor specific, however, similar functions exist in the other database products.
 
-Current_Date, Sysdate
-Returns the current date and time. Current_Date works in conjunction with a time zone, whereas sysdate will always return the server date and time value.
-To_Date(char, format)
-Takes a character data type and converts it back into a date/time data type using the specified format.
-Greatest(date1, date2, ..)
-Returns the latest date (works across multiple columns)
-Least(date1,date2,…)
-Returns the earliest date (also across multiple columns)
-Max(date)
-Returns the latest date (in one column only)
-Min(date)
-Returns the earliest date (in one column only)
-Round(date, format)
-Returns a date rounded to the unit specified by the format. If you omit the format, the date is rounded to the nearest day.
-Trunc(date)
-Returns a date at midnight (effectively removing the time component)
-Trunc(date, format)
-Allows to selectively remove part of a date
+|  Function  | Description  |
+|-------|-----|
+| Current_Date, Sysdate  | Returns the current date and time. Current_Date works in conjunction with a time zone, whereas sysdate will always return the server date and time value.  | 
+|  To_Date(char, format)  |  Takes a character data type and converts it back into a date/time data type using the specified format.  | 
+ |  Greatest(date1, date2, ..)  |  Returns the latest date (works across multiple columns) | 
+|  Least(date1,date2,…)  |  Returns the earliest date (also across multiple columns)  | 
+ |  Max(date)  |  Returns the latest date (in one column only) | 
+ | Min(date)   |  Returns the earliest date (in one column only)  | 
+ |  Round(date, format)  |  Returns a date rounded to the unit specified by the format. If you omit the format, the date is rounded to the nearest day. | 
+ |  Trunc(date)  |  Returns a date at midnight (effectively removing the time component)  | 
+ |  Trunc(date, format) |  Allows to selectively remove part of a date  | 
 
-> Note: 
+
+
+
+### To_Char(date/time,format)
+
+| Day  | Month | Year   | Hour   | Minute   | Seconds |
+|-------|-----|----------|----------|----------|----------|
+| D | MM  | YY  | HH | MI   | SS  |
+|  DD  | MON  | YYYY  | HH12 |    |  SSSS |
+| DDD |   |  RR |  |    | SSSSSS  |
+|  DAY  |   | RRRR  |  |    |   |
+| DY |   | YEAR  | A.M. or P.M. |    |   |
+
+AM or PM
+
+* Allows to format a date/time value in various ways
 * The RR or RRRR format mask is for Y2K compatibility. 
 * If a year is given in a two-digit format and if the year is **between 50 and 99**, the year is prepended with 19, otherwise it is prepended with 20.
 
-| Name  | Age | City     |
-|-------|-----|----------|
-|  |   |   |
-|    |   |   |
-
-To_Char(date/time,format)
-Allows to format a date/time value in various ways
-Day
-Month
-Year
-Hour
-Minute
-Seconds
-D
-MM
-YY
-HH
-MI
-SS
-DD
-MON
-YYYY
-HH12
-
-SSSS
-DDD
-
-RR
-HH24
-
-SSSSS
-DAY
-
-RRRR
-AM or PM
-
-
-DY
-
-YEAR
-A.M. or P.M.
 
 
 
+| Day  | Month | Year   | Hour   | Minute   | Seconds |
+|-------|-----|----------|----------|----------|----------|
+|  |   |   |  |    |   |
+|    |   |   |  |    |   |
+|  |   |   |  |    |   |
+|    |   |   |  |    |   |
+|  |   |   |  |    |   |
 
 
-Suffixes for Number Display
-TH
-Ordinal number (DDTH for 4th)
-SP
-Spelled out numbers (DDSP for FOUR)
-SPTH or THSP
-Spelled-out ordinal numbers (DDTHSP for FOURTH)
+### TO_CHAR: SUFFIXES and Prefix
 
-Prefixes
-FM
-Returns a value with no leading or trailing blanks.
+* Suffixes for Number Display
 
+|  Suffix  | Description  |
+|-------|-----|
+|  TH | Ordinal number (DDTH for 4th)   | 
+|  SP  |  Spelled out numbers (DDSP for FOUR)  |
+|  SPTH or THSP
+  |  Spelled-out ordinal numbers (DDTHSP for FOURTH)  |
+
+|  Prefix  | Description  |
+|-------|-----|
+| FM  |  Returns a value with no leading or trailing blanks.  | 
+
+***
 
 * **Oracle** stores date and time (datetime) data in its own internal format, in `7-byte` fields that correspond to century, year, month, day, hour, minute, and second. 
-* The date/time default format is dd-Mon-YY or dd-Mon-YYYY. 
-* Note that there is no time component. Therefore, when you do not specify a format, the default format is used.
+* The date/time default format is `dd-Mon-YY` or `dd-Mon-YYYY`. 
+* Note that there is `no time component`. Therefore, when you do not specify a format, the default format is used.
 
+### TO_CHAR, TO_DATE
 
-You use the **TO_CHAR** function to `format date/time values` stored in the database for viewing and the `TO_DATE` function `to store a string and a corresponding format back into the database as a date/time data type`.
+* use the **TO_CHAR** function to `format date/time values stored in the database for viewing` (to the date base)
+ and 
+* the **TO_DATE**  function `to store a string and a corresponding format back into the database as a date/time data type` (to the client).
 
 Image here
 
-### Example 2.2.1:
-Issue the following SQL statements using the TO_CHAR function to format date values:
+### Example 2.2.1: using the TO_CHAR function to format date values:
 
+```SQL
 
-### Example 2.2.2:
-Issue the following SQL statements using the Current_Date and Sysdate functions:
+```
+
+### Example 2.2.2:  using the Current_Date and Sysdate functions:
+
+```SQL
+
+```
 
 Current_Date works with time-zone and is the date/time on the client computer. Sysdate is always the database server date/time. Change 4 time zones  west of GMT (east coast)
 
 
-### Example 2.2.3:
-Issue the following SQL statement using the GREATEST and LEAST functions: 
+### Example 2.2.3: using the GREATEST and LEAST functions: 
+
+```SQL
+
+```
 
 
+### Example 2.2.4: using the MIN and MAX aggregate functions:
 
+```SQL
 
-### Example 2.2.4:
-Issue the following SQL statement using the MIN and MAX aggregate functions:
+```
 
+### Example 2.2.5: using the ROUND function: 
 
-### Example 2.2.5:
-Issue the following SQL statements using the ROUND function: 
+```SQL
 
+```
 
-
-### Example 2.2.6:
-Issue the following SQL statement using the TRUNC function: 
+### Example 2.2.6: using the TRUNC function: 
 
 * The `TRUNC` function used on date/time values removes the time portion of a date/time value (if no number of decimal parameter is specified). 
 * A date value without a time component is set to midnight.
