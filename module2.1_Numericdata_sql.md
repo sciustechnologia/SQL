@@ -135,38 +135,79 @@ FROM jobs;
 
 > WARNING: 
 * The **aggregate functions** – `COUNT`, `SUM`, `AVG`, `MAX`, and `MIN` – do not handle `NULL` in the same way as ordinary functions and operators. 
-* Instead of returning `NULL` as soon as a `NULL operand` is encountered, they only take non-NULL fields into consideration while computing the outcome.
+* Instead of returning `NULL` as soon as a `NULL operand` is encountered, **they only take non-NULL fields into consideration** while computing the outcome.
 
 
 ### Example 2.1.4:
 Issue the following SQL statement using the COUNT function: 
 
-`Count(*)` counts all records of the table listed in the `FROM` clause in the `SELECT` statement. The count function only counts non-null fields when used on a column, even when a record exists. Hence, **if you use a column to count on, and some records contain nulls in this column, the record is not counted**. See the next two examples.
+```SQL
+SELECT COUNT(*)
+FROM employees;
+
+SELECT COUNT(employees_id)
+FROM employees;
+```
+
+OUTCOME should be the same.
+
+* `Count(*)` counts all records of the table listed in the `FROM` clause in the `SELECT` statement. 
+* The count function only counts non-null fields when used on a column, even when a record exists. 
+* Hence, **if you use a column to count on, and some records contain nulls in this column, the record is not counted**. See the next two examples.
 
 ### Example 2.1.5:
 Issue the following SQL statement using the COUNT function: 
 
+```SQL
+SELECT COUNT(manager_id), COUNT(*)
+FROM employees;
+
+SELECT COUNT(commissoin_pct), COUNT(*)
+FROM employees;
+```
+
 * The first example shows that there 106 employees (out of a total of 107) that have a manager. 
 * The second example shows that there are 35 employees that earn a commission on top of their regular salary.
 
-### Example 2.1.6:
-Issue the following SQL statement using the **GREATEST** function: 
+### Example 2.1.6: The **GREATEST** function: 
+
+> Note: 
+`GREATEST()` and `LEAST()` work **horizontally across multiple columns** (on a per row basis) whereas 
+* `Min and Max` can only be applied **for only one column, but for many rows**.
+
+
+```SQL
+SELECT q1,q2,q3,q4 GREATEST(q1,q2,q3,q4)
+FROM sales_by_quarter;
+```
+
+* q1,q2,q3,q4 are columns
+* goes row by row
+
 
 As you can see, the `GREATEST` function selects the highest value per row based on the columns provided as parameters for this function.
 
 ### Example 2.1.7:
 Issue the following SQL statement using the **LEAST** function: 
 
+```SQL
+SELECT q1,q2,q3,q4 LEAST(q1,q2,q3,q4)
+FROM sales_by_quarter;
+```
+
+***
 
 ### Example 2.1.8:
 Issue the following SQL statement using the MAX, MEDIAN, and MIN aggregate functions: 
 
+```SQL
+SELECT COUNT(manager_id), COUNT(*)
+FROM employees;
+
 * Looking at the min_salary column values in ascending order on the right side is probably helpful in understanding these aggregate functions. 
 * The **median** is the number “in the middle”, where `50% of the data is less than the medium and the other 50% is greater than the median`.
 
-> Note: 
-The functions `Greatest` and `Least` work **horizontally across multiple columns (on a per row basis) whereas 
-* `Min and Max` can only be applied **against one column, but for many rows**.
+
 
 Having all these functions at your disposal allows you to construct complex business logic in a SELECT statement, rather than having to write procedural code in a function or stored procedure. 
 
@@ -180,6 +221,11 @@ You can nest functions, that is, call a function from within a function as its a
 
 ### Example 2.1.9:
 Issue the following SQL statement using GREATEST nested inside a MAX function: 
+
+```SQL
+SELECT MAX(manager_id), GREATEST(*)
+FROM employees;
+```
 
 * The **Greatest** function is nested inside the **Max** function. 
 * The Greatest function takes all quarter columns as an argument and determines the best sales in a quarter per year. 
