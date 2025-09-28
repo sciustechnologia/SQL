@@ -251,37 +251,83 @@ ORDER BY manager;
 
 ```
 
+* Without the `TO_CHAR ` function an error would occur. 
+
  > WARNING: 
- * The **to_char** function is necessary here to **convert the manager_id column into a character column** since the substitute for a null value is ‘No Manager’ which is a character data type. 
+ * The **TO_CHAR** function is necessary here to **convert the manager_id column into a character column** since the substitute for a null value is ‘No Manager’ which is a character data type. 
  * The function `NVL` provides two values for one column, and it must be of the same data type. 
 
 ### Example 2.1.11:
-Without the `to_char ` function the following error would be generated:
+Without the `TO_CHAR ` function the following error would be generated:
 
 ```SQL
-SELECT 
+SELECT department_name, NVL(manager_id) AS manager
+FROM departments
+ORDER BY manager; 
 
 ```
+
+Error message: invalid number refers to the `manager_id`.
 
 ***
 
-Using the **NVL2** function you cannot not only replace the null value, but also the non-null value with a different value.
+Using the **NVL2** function you cannot not only replace the `NULL` value, but also the non-null value with a different value.
 
-### Example 2.1.12:
-Issue the following SQL statement using the NVL2 function:
-
-```SQL
-SELECT 
-
-```
-
-
-### Example 2.1.13:
-Issue the following SQL statement using the STDEV and the VARIANCE function: 
+### Example 2.1.12: using the NVL2 function:
 
 ```SQL
-SELECT 
-
+SELECT department_name, NVL2(TO_CHAR(manager_id) 'Manager', 'No Manager') AS manager
+FROM departments; 
 ```
 
+* when there is a value - we see a string Manager
+* when there is no value - we see a string No Manager.
+
+### Example 2.1.13: using the STDEV and the VARIANCE function: 
+
+```SQL
+SELECT STDEV(min_salary) "Stanadard DEv", VARIANCE(min_salary) "Variance"
+FROM jobs;
+```
+
+### 1. What is the difference between COUNT(*) and COUNT(column)
+* COUNT(*): Counts every row, regardless of whether any columns contain NULL values.
+* COUNT(column): Counts only the rows where the specified column has a non-NULL value.
+* Use COUNT(*) for a total record count. 
+* Use COUNT(column) to count how many records have a value for a specific field.
+
+### 2. What is the difference netween the MAX(MIN) and the GREATEST(LEAST) functions?
+* **Function Type**: 
+  * MAX/MIN are aggregate functions; 
+  * GREATEST/LEAST are scalar functions.
+**Scope**: 
+  * MAX/MIN operate vertically on a column across multiple rows. 
+  * GREATEST/LEAST operate horizontally on multiple values within a single row.
+
+```SQL
+SELECT GREATEST(score1, score2, score3) AS highest_score FROM student_data;
+```
+
+**Result**
+* MAX/MIN typically return a single aggregated value (unless grouped). 
+* GREATEST/LEAST return a value for every row in the result set.
+
+### 3. What does the NVL function do?
+*  used to handle NULL values by replacing them with a specified value.
+ syntax for NVL is: `NVL(expression, replacement_value)`
+1. The expression or column to check for NULL values.
+2. The value to return if the first argument is NULL.
+
+```SQL
+SELECT employee_name, NVL(commission, 'No Commission') AS commission_status
+FROM employees;
+```
+
+* any row with a NULL commission will show "No Commission" in the commission_status column. Rows with a valid commission value will show that value as is.
+
+`IFNULL`: Used in MySQL and SQLite.
+
+`ISNULL`: Used in SQL Server.
+
+`COALESCE`: This is a more generalized and widely supported function that can take multiple arguments and returns the first non-NULL value. It is available in most modern SQL databases, including Oracle, MySQL, SQL Server, and PostgreSQL. NVL(a, b) is equivalent to COALESCE(a, b).
 
