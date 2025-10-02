@@ -100,44 +100,85 @@ FROM dual;
   * when you have to look for substrings
 * returns an integer position at which a substring is found within a string. 
 
-The example shows how to find the position of the first hyphen in a social security number. The additional syntax allows for specifying the starting position from which to start searching and the number of occurrence of the substring found in the string. 
+The example shows how to find the position of the first hyphen in a social security number. 
+* The additional syntax allows for specifying the starting position from which to start searching and the number of occurrence of the substring found in the string. 
 * The parameter 1 after the hyphen signifies to start from the beginning of the string, the second parameter (2) instructs the function to find the second occurrence.
 
 ```SQL
-
+SELECT INSTR('123-45-6789', '-')
+FROM dual;
 ```
+
+EXPECTED RESULT:
+4
+Meaning: 
+* 4th Position is the the first position an hyphen can be found. 
+
+```SQL
+SELECT INSTR('123-45-6789', '-', 1,2)
+FROM dual;
+```
+
+* ,1,2 means: start from the beginning and find the second occurance. 
 
 ### Example 2.3.5: using the **LENGTH** function: 
 
 ```SQL
-
+SELECT LENGTH('this is a test sentence') AS Length
+FROM dual;
 ```
-
-
-
 
 
 ### Example 2.3.6: using the **TRIM** function: 
 
 ```SQL
-
+SELECT TRIM('    Michael     ') AS trimmed
+FROM dual;
 ```
+
+* leading and trailing blank space
 
 ### Example 2.3.7: using the **SUBSTR** function:
 
 ```SQL
-
+SELECT SUBSTR('Michael',3,2) AS substringing
+FROM dual;
 ```
+
+* extracting 2 character, inclusive, 
 
 * The substring function extracts a substring from a string or column. 
 * The second parameter (3) is the starting position from which to start extracting, the second parameter (2) is the number of characters to extract.
 
-
-
-
-
 ### Example 2.3.8: using the **INSTR** and **SUBSTR** functions: 
 
 ```SQL
-
+SELECT INSTR('Albert Einstein',' ') AS findingblankspace
+FROM dual;
 ```
+
+EXPECTED RESULT:
+7
+
+Position 7 is the occurance of the blank space. 
+
+Now to extract the last name:
+
+```SQL
+SELECT SUBSTR('Albert Einstein',INSTR('Albert Einstein', ' ')+1) AS extractLastName
+FROM dual;
+```
+
+```SQL
+SELECT SUBSTR('Albert Einstein',1, LENGTH('Albert Einstein')-INSTR('Albert Einstein',' ')) AS extractFirstName
+FROM dual;
+```
+
+```SQL
+SELECT SUBSTR('Albert Einstein',1, LENGTH('Albert Einstein')-INSTR('Albert Einstein',' ')-1) AS extractFirstName
+FROM dual;
+```
+
+1. Can you explain the collating sequence of a database?
+2., Do you know what an INSTR function is?
+3., What is the ASCII versus the CHR function.  
