@@ -1,0 +1,754 @@
+cells:
+  - kind: 1
+    value: "## 3.1 Complex Filtering of Data"
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.1.1: using a range value `WHERE` clause: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT last_name, first_name, salary
+      FROM employees
+      WHERE salary >= 8000 AND salary <=10000;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      This query only returns rows where the salary column is $8000 or more but
+      at the same time less or equal to $10,000. 
+
+      Now consider the following two situations:
+
+      1. How many rows will the query return for the following search
+      condition: 
+
+      * `Salary = 8000` AND `Salary = 10000`
+
+      * Answer: None
+
+      2. How many rows will the query return for the following search
+      condition: 
+
+      * `Salary >= 8000` OR `Salary =<10000` 
+
+      * Answer: All
+    languageId: markdown
+  - kind: 1
+    value: >-
+      * The `AND` operator requires all search conditions to be true in order
+      for the entire search condition to be true and therefore a row will be
+      returned. 
+
+      * Using the `OR` operator only requires one of the multiple conditions to
+      be true for the entire search condition to be true.
+
+      * Be careful when analyzing user requests and translating them into SQL
+      code. For example, your boss asks you to give him a list of all employees
+      living in California and Arizona. If you were to translate this request
+      literally, you would receive no returned rows. You have to of course the
+      OR operator and look for employees living in California or Arizona.
+
+      * The `IN` operator allows you to list multiple values in a comma
+      separated list with repeating the `OR` operator or the column name over
+      and over. For example, to search for employees living in three states, you
+      would have to write the following search condition:
+
+      State = ‘CA’ or State = ‘AZ’ or State = ‘OR’ ,using the In operator: State
+      In(‘CA’,’AZ’,’OR’)
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.1.2: using  complex WHERE conditions"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT employee_id, start_date, end_date
+      FROM job_history
+      WHERE
+      	start_date BETWEEN '1-jan-90' AND '31-dec-94'
+      OR
+      	start_date > '1-jan-98'
+      ORDER BY start_date;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.1.3: using multiple `WHERE` conditions linked with a
+      `Boolean OR"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, DEPARTMENT_ID
+      FROM EMPLOYEES
+      WHERE DEPARTMENT_ID = 100 OR DEPARTMENT_ID = 110 OR DEPARTMENT_ID = 40;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.1.4: using the `IN` operator"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, DEPARTMENT_ID
+      FROM EMPLOYEES
+      WHERE DEPARTMENT_ID IN(100, 110, 40)
+    languageId: oracle-sql
+  - kind: 1
+    value: "* The `IN` operator is useful when there are more than 2 values to
+      compare against a column."
+    languageId: markdown
+  - kind: 1
+    value: >-
+      #### `NOT` operator
+
+      * used in conjunction with the `BETWEEN`, `IN`, `LIKE` and `Is Null`
+      predicate. 
+
+      * allows you to negate a search condition. 
+
+      * usecase: as part of the predicate or before the search condition.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.1.5: using the NOT operator before the IN operator"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, DEPARTMENT_ID
+      FROM EMPLOYEES
+      WHERE DEPARTMENT_ID NOT IN(100, 110, 40);
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      Now we consider using multiple search conditions across **multiple
+      columns** and connecting those conditions using the logical operators
+      `AND`, `OR` or `NOT`. 
+
+
+      ### Example 3.1.6: two `WHERE` conditions connected by a Boolean `AND`: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, DEPARTMENT_ID, COMMISSION_PCT, SALARY
+      FROM EMPLOYEES
+      WHERE COMMISSION_PCT IS NULL AND SALARY >=10000;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.1.7 using two WHERE conditions connected by a Boolean AND:"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, DEPARTMENT_ID, manager_id, SALARY
+      FROM EMPLOYEES
+      WHERE manager_id IS NULL AND salary >=1000;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.1.8 using two WHERE conditions connected by a Boolean OR: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, DEPARTMENT_ID, manager_id, SALARY
+      FROM EMPLOYEES
+      WHERE manager_id IS NULL OR salary >=1000;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * using the `AND` operator yielded one record since both search conditions
+      must be true. 
+
+      * using the `OR` operator resulted in 19 records, because only one of the
+      search conditions must be met.
+    languageId: markdown
+  - kind: 1
+    value: |+
+      order of precedence in the `WHERE` clause
+      | Order or precedence | Operator |
+      |----------|----------|
+      |  | Positive sign(+), negative sign(-) |
+      |  | Multiplication (*), Division (/) | 
+      |  | Addition (+), Subtraction (-) |
+      |  | =, >,<,<>, <=, >=, Between, In, Like, Is Null | 
+      |  | Not |
+      |  | And | 
+      |  | Or | 
+
+
+
+
+
+
+
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.1.9a using parenthetical conditions:"
+    languageId: markdown
+  - kind: 2
+    value: >
+      SELECT  first_name, last_name, phone_number, job_id, SALARY, manager_id
+
+      FROM EMPLOYEES
+
+      WHERE SUBSTR(phone_number, 1,3) = '650'
+
+      AND
+
+      (job_id='St_clerk' OR (salary>3000 AND manager_id=120));
+
+
+      SELECT count(*) FROM employees 
+
+      WHERE hire_date < '01-Jan-1996';
+
+      COUNT(*)
+
+
+      SELECT count(*) FROM employees 
+
+      WHERE hire_date < '01-Jan-1996' OR SUBSTR(phone_number, 1,3) = '650';
+
+      COUNT(*)
+
+
+      SELECT count(*) FROM employees 
+
+      WHERE hire_date < '01-Jan-1996' OR SUBSTR(phone_number, 1,3) = '650' AND
+      salary >8000;
+
+      COUNT(*)
+    languageId: sql
+  - kind: 1
+    value: >-
+      * You can define any number of parenthetical conditions and even nest them
+      as needed. 
+
+
+      * Following are the rules how SQL handles parenthetical conditions:
+        • Parenthetical conditions are processed before non-parenthetical conditions
+        • Two or more independent parenthetical conditions are processed from left to right
+        • Nested parenthetical conditions are processed from the innermost to the outermost
+
+      * But before even SQL processes the order of your parentheses, a single
+      search condition is processed in a very specific way.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.1.9b using parenthetical conditions"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT count(*) 
+      FROM employees 
+      WHERE hire_date < TO_DATE('01-01-1996', 'MM-DD-YYYY');
+    languageId: oracle-sql
+  - kind: 2
+    value: |-
+      SELECT count(*) FROM employees 
+      WHERE hire_date < '01-Jan-1996' OR SUBSTR(phone_number, 1,3) = '650';
+    languageId: oracle-sql
+  - kind: 2
+    value: >-
+      SELECT count(*) FROM employees 
+
+      WHERE (hire_date < '01-Jan-1996' OR SUBSTR(phone_number, 1,3) = '650') AND
+      salary > 8000;
+    languageId: oracle-sql
+  - kind: 2
+    value: >-
+      SELECT count(*) FROM employees 
+
+      WHERE (hire_date < '01-Jan-1996' OR SUBSTR(phone_number, 1,3) = '650') AND
+      salary > 8000;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## 3.2 SQL Expressions
+
+
+      * In many instances, you will have to write expressions inside your SQL
+      query to meet the needs of your users. 
+
+      * Keep one thing in mind, the better the design of the database, the
+      simpler the queries will be to design. 
+
+      * In addition, the programming environment that every database vendor
+      provides enables you to write sophisticated functions that you can use in
+      the SQL queries. 
+
+      * Last, but not least, you will write complex programming logic that
+      supplements your SQL logic in your database. We will focus here now on
+      some additional functions that are vendor specific allowing the SQL
+      developer to add some additional logic to your SQL queries.
+
+
+      In many situations, you need a conditional logic construct within SQL.
+      However, SQL does not provide this logic, SQL is a command base language
+      that does not allow for multi-line constructs. Here is where the vendor
+      specific functions come into play. These functions create a link between
+      the SQL engine and the programming environment of the database to allow
+      for multi-line constructs.
+
+
+      The first function is the so-called `Decode` function. 
+
+      * This function works like an If..Else…End If construct, not exactly
+      though:
+
+
+      **Syntax**
+
+
+      ```Syntax
+
+      DECODE(col/expr, search1, result1 [,search2, result2, …,][,default])
+
+      ``` 
+
+
+      * The first argument is either a column or an expression. 
+
+      * The second argument is a search value search1. If the column or
+      expression value equals the search value search1, then result1 is
+      returned. 
+
+      * You may test for many more search values if needed. 
+
+      * If none of the search values matches the column or expression value, you
+      can specify a default value to be returned.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.2.1 using a DECODE function"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  first_name, last_name, phone_number, job_id,
+      DECODE (SUBSTR(job_id,1,2),
+      'AD','Administration',
+      'IT','Information Technology',
+      'ST','Stock',
+      'SA','Sales', 'Other')
+      AS "Department"
+      FROM EMPLOYEES;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * A relatively new statement is the Case statement. The case statements
+      allows you to perform an inline comparison statement similar to the decode
+      function but is more flexible. There are two variations of the CASE
+      expression, the Simple CASE and the Searched CASE expression.
+
+
+      * A condition is comprised of a column reference and/or expression on the
+      left side, a relational operator (such as the equal (=) sign) and a value
+      or list of values:
+
+      column/expr {=, >, <, =>, <=, <>, !=} value(s)
+
+
+      * The Simple CASE statement breaks the condition in two pieces, the left
+      side at the top of the CASE statement, then the values in each individual
+      WHEN clause. Note that the equal sign as a relational operator is implied.
+      The Searched CASE statement uses the entire condition in each WHEN clause
+      allowing for a more complex conditional logic.
+
+
+      **Syntax of a simple CASE**
+
+
+      ```syntax
+
+      Case [Column/expr]
+      	When value1 then result1
+      	When value2 then result2
+      	…
+      	Else result
+      End
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.2.2 using a Simple CASE statement: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  employee_id, last_name, job_id,
+      CASE SUBSTR(job_id,1,2)
+      WHEN 'AD' THEN 'Administration'
+      WHEN 'IT' THEN 'Information Technology'
+      WHEN 'ST' THEN 'Stock'
+      WHEN 'SA' THEN 'Sales'
+      ELSE 'Other'
+      END AS "Department"
+      FROM EMPLOYEES;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      **Syntax***
+
+
+      ```syntax
+
+      Case 
+      	When condition1 then result1
+      	When condition2 then result2
+      	...
+      	Else result
+      End
+
+      ```
+
+
+      * Looking at the case statement definition you may have noticed that the
+      column/expr value at the top of the case statement is optional. This works
+      well when you compare a single column or expression to a value using the
+      equal (=) operator. This part works exactly like the decode function.
+
+      * However, using the Case statement also allows you to perform range and
+      other more complex comparison by moving the column/expr into the condition
+      portion of the Case statement (Searched CASE). This enables you to do two
+      things: First you can now use other relational operators besides the equal
+      (=) operator and you can compare different column/expr values in each
+      individual condition statement.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.2.3 using a Searched CASE statement: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT  employee_id, last_name, salary,
+      CASE 
+          WHEN salary <2500 THEN 'Low Income'
+          WHEN salary <5000 THEN 'Middle Income'
+          WHEN salary <10000 THEN 'High Income'
+          ELSE 'Unbelievable'
+      END AS "Income Range"
+      FROM EMPLOYEES
+      ORDER BY EMPLOYEE_ID;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.2.4 using a calculated expression (NULL):"
+    languageId: markdown
+  - kind: 2
+    value: >-
+      SELECT last_name ||', '|| first_name AS Full_name, salary, commission_pct,
+      salary * commission_pct
+
+      AS "Commission"
+
+      FROM EMPLOYEES
+
+      WHERE employee_id LIKE '14%'; 
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.2.5 demonstrating NULL propagation: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT last_name ||', '|| first_name AS Full_name, 
+      salary, commission_pct, 
+      salary * commission_pct + SALARY AS Full_Salary
+      FROM EMPLOYEES
+      WHERE employee_id LIKE '14%'; 
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * Notice in the above example that the Full_Salary column is null for
+      those employees who do not earn a sales commission. Once a part of an
+      expression is null, then the entire expression results in a null. 
+
+      * As you can see, for records where there is a null in the commission
+      percentage field, the sum of the salary and commission yields a null when
+      the commission is null.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 3.2.6 using the NVL function to replace nulls with zeros: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT last_name ||', '|| first_name AS Full_name, 
+      salary, commission_pct, 
+      salary * (1+NVL(commission_pct,0)) AS Full_Salary
+      FROM EMPLOYEES
+      WHERE employee_id LIKE '14%'; 
+    languageId: oracle-sql
+  - kind: 1
+    value: "* To avoid null propagation, use the `NVL` function to replace a null
+      with a specified value, in most cases a zero value for number type
+      values."
+    languageId: markdown
+  - kind: 1
+    value: >-
+      ## 3.3 Intersect, Difference, and Union of Sets
+
+
+      **A set** 
+
+      * basically means a subset of data in a relation or the entire relation.
+
+      * of data can be as small as one column of one row. 
+
+      * For that matter, it can be an empty set, an operation in SQL that does
+      not return any data. This is sometimes important to know that something
+      does not exist.
+
+      * Having all these sets, we may want to perform some operations on these
+      sets. There are three main operations we can execute on sets of data in
+      SQL:
+
+
+      1. Union of Sets: 	To combine two or more similar sets
+
+      2. Intersect of Sets:	To find common data in two or more sets
+
+      3. Difference of Sets:	To find different data in two or more sets
+
+
+      **Intersection**
+
+
+      * All set operations can be performed either by specific column or
+      columns, or on the entire table. The above example shows values that may
+      be stored in one column (for different records) or in different columns
+      (for the same record).
+
+      * In the next example, we will first look at data from the same data
+      source, such as table. For example, show me all employees who are sales
+      reps (one set) and intersect them with the employees who earn $10,000.
+
+
+      <image>
+
+
+      * As you can see from the Venn diagram above, there are 30 employees who
+      are sales reps and 4 employees who are lucky enough to earn $10,000. The
+      intersection of these two sets yields 3 employees who are sales reps and
+      make $10,000.
+
+
+      ### Example 3.3.1 demonstrating an intersection operation based on the
+      same data source: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT count(employee_id)
+      FROM EMPLOYEES
+      WHERE JOB_ID = 'SA_REP';
+    languageId: oracle-sql
+  - kind: 2
+    value: |-
+      SELECT count(employee_id)
+      FROM EMPLOYEES
+      WHERE salary = 10000;
+    languageId: oracle-sql
+  - kind: 2
+    value: |-
+      SELECT last_name, first_name, job_id, salary
+      FROM EMPLOYEES
+      WHERE JOB_ID='SA_REP' AND salary = 10000;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * This example shows how the intersection of two data sets originating
+      from the same data source is performed using the `AND` operator in the
+      `WHERE` clause to combine the two conditions.
+
+
+      * The previous example showed the set operation `INTERSECT` using specific
+      column values, in this example for each employee the salary column and
+      job_id column. Now we will consider an example that **takes sets of data
+      from different data sources (tables) and compares them**.
+
+
+      * The `INTERSECT` operator returns all rows that are common to multiple
+      queries. 
+
+      * The following rules apply for the intersect operation:
+          • The number of columns and their respective data types being used in the SELECT statement must be the same. The names of the columns do not have to be identical.
+          • Reversing the order of the queries does not change the result.
+          • The intersect operation does not ignore Null values. 
+          • The intersect operation removes duplicates unless INTERSECT ALL is used.
+      > WARNING: 
+
+      The `INTERSECT ALL` command is part of the SQL standard, but Oracle did
+      not implement it yet. Use only INTERSECT in Oracle.
+
+
+      **Syntax**
+
+
+      ```syntax
+
+      SELECT col1, col2, … FROM query1
+
+      INTERSECT [ALL]
+
+      SELECT col1, col2, …FROM query2
+
+      [ORDER BY col1, col2, ..];
+
+      ```
+
+
+      * An optional ORDER BY clause can be specified after the intersect
+      operation applying to the resulting data set. Use the column names or
+      column aliases of the first `SELECT` statement in the `ORDER BY` clause.
+
+
+      ### Example 3.3.2 using an INTERSECT operator on employee_id, job_id:
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT employee_id, job_id
+      FROM EMPLOYEES
+      INTERSECT
+      SELECT EMPLOYEE_ID, JOB_ID
+      FROM JOB_HISTORY
+    languageId: oracle-sql
+  - kind: 1
+    value: "Example 3.3.3 using an INTERSECT operator on employee_id, job_id,
+      department_id:"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT employee_id, job_id, department_id
+      FROM EMPLOYEES
+      INTERSECT
+      SELECT EMPLOYEE_ID, JOB_ID, department_id
+      FROM JOB_HISTORY
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      **Difference**
+
+
+      * Again, we will demonstrate this set operator on columns only as well as
+      on entire sets. The set operator for the difference is called `EXCEPT`
+      (standard SQL), in Oracle it is called `MINUS`. 
+
+
+      <image>
+
+
+
+      ### Example 3.3.4 demonstrating a MINUS operation: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT last_name, first_name, job_id, salary
+      FROM EMPLOYEES
+      WHERE JOB_ID='SA_REP' AND salary <> 10000;
+    languageId: oracle-sql
+  - kind: 1
+    value: >
+      **Similar rules apply**
+
+      * The number of columns and their respective data types being used in the
+      `SELECT` statement must be the same. The names of the columns do not have
+      to be identical.
+
+      * Reversing the order of the queries does change the result.
+
+      * The `MINUS` operation does not ignore `Null` values. 
+
+      * The `MINUS` operation removes duplicates unless `MINUS ALL` is used.
+
+
+
+      **Syntax**
+
+
+      ```Syntax
+
+      SELECT col1, col2, … FROM query1
+
+      EXCEPT [ALL]
+
+      SELECT col1, col2, …FROM query2
+
+      [ORDER BY col1, col2, ..];
+
+      ```
+
+
+
+      > WARNING: 
+
+      The `EXCEPT` operator (standard SQL) is called `MINUS` in Oracle. The
+      option ALL does not exist in Oracle.
+
+
+      Again, let us take a look at the employees table and the job history
+      table. If we select employee_id and job_id from the employees table and
+      subtract the corresponding column values from the job history table, the
+      result displays employees that have never changed their jobs. 
+
+
+
+      ### Example 3.3.5 using the MINUS operation: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT employee_id
+      FROM EMPLOYEES
+      MINUS
+      SELECT EMPLOYEE_ID
+      FROM JOB_HISTORY;
+    languageId: oracle-sql
+  - kind: 1
+    value: |-
+      **Union**
+
+      * The `UNION` operator is probably the most commonly used set operator.
+
+      ### Example 3.3.6 demonstrating a UNION operation:
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT last_name, first_name, job_id, salary
+      FROM EMPLOYEES
+      WHERE job_id='SA_REP' OR salary = 10000;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The union statement combines data from multiple queries (tables) and
+      automatically eliminates duplicate rows. Here are some rules for the Union
+      operator:
+
+
+      * The number of columns and the data types of the columns being used in
+      the SELECT statement must be the same.
+
+      * The names of the columns do not need to be identical.
+
+      * The UNION operation does not ignore Null values.
+
+      * The UNION operation removes duplicates unless UNION ALL is used.
+
+      * The output is sorted in ascending order of the first column of the
+      SELECT clause. An Order By clause can be used at the very end of the SQL
+      statement to perform a different sort order.
+
+
+      **Syntax**
+
+
+      ```Syntax
+
+      SELECT col1, col2, … FROM query1
+
+      UNION [ALL]
+
+      SELECT col1, col2, …FROM query2
+
+      [ORDER BY col1, col2, ..];
+
+      ```
+
+
+      Note: The UNION and UNION ALL operators exist in Oracle.
+
+
+      ### Example 3.3.7a using a UNION operator: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT employee_id, job_id, department_id, 'Employee' AS "Table Name"
+      FROM EMPLOYEES
+      WHERE department_id=100
+      UNION
+      SELECT EMPLOYEE_ID, job_id, department_id,'Job History'
+      FROM JOB_HISTORY;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 3.3.7b Add the following ORDER BY clause: ORDER BY Job_ID,
+      Employee_ID:"
+    languageId: markdown
