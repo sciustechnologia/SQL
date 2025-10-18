@@ -1,0 +1,583 @@
+cells:
+  - kind: 1
+    value: >-
+      ## 4.1. Using Multiple Tables: Joins
+
+
+      Up to this point, we have only used one table in the SELECT statement. 
+
+      However, in most situations, we have to use more than one table to meet
+      the needs of the user. 
+
+      In fact, the way we store the data in a relational database requires us
+      almost always to use multiple tables.
+
+
+      To use more than table in the SELECT statement, 
+
+      we have to join tables together so that it makes sense, 
+
+      not just simply combining all the data together. 
+
+
+      If we use two tables in the FROM clause without joining them, 
+
+      the result set is a Cartesian join, 
+
+      that is every row from table A is joined with every row in table B.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 4.1.1:"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT count(*) from departments;
+      SELECT count(*) from EMPLOYEES;
+    languageId: oracle-sql
+  - kind: 2
+    value: |-
+      SELECT 
+          e.last_name, 
+          e.department_id, AS EmpDep, 
+          d.department_id AS Dep, 
+          d.department_name
+      FROM 
+          EMPLOYEES e, 
+          DEPARTMENTS d;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      There are 107 employees and 27 departments. Using no join condition
+      results in a Cartesian join, that is 107 * 27 = 2889 records!
+
+
+      This is not the result we want. We only want those rows, where the
+      `department_ID` in the `employees` table matches the `department_ID` in
+      the `department` table. 
+
+      It sounds like a typical search condition, and in fact, we can construct a
+      `join` using a `WHERE` clause.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 4.1.2 using a join condition in the WHERE clause: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT 
+          e.last_name, 
+          e.department_id AS EmpDep, 
+          d.department_id AS Dep, 
+          d.department_name
+      FROM 
+          EMPLOYEES e, 
+          DEPARTMENTS d
+      WHERE e.department_id = d.department_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The returning result set contains 106 records only, far fewer than the
+      Cartesian join product in example 5.1. 
+
+
+      We see now the `department_id` value in both tables is the same. But we
+      also notice that although there are 107 employees, joining them with the
+      `department` table only yields 106 records. 
+
+      We will discuss this discrepancy in the upcoming chapters.
+    languageId: markdown
+  - kind: 1
+    value: >
+      ## 4.2 Inner Join
+
+
+      The SQL standard defines several `joins`, the most common one is the
+      `inner join`. 
+
+
+      Consider the student – class scenario again. An inner join will yield all
+      records where a student has enrolled in a class. It will not show students
+      who are accepted into the school but have not yet registered for any
+      classes nor will it show classes that are scheduled but no students have
+      enrolled yet.
+
+
+      In general, 
+
+
+      * you **choose the primary key field(s) from the parent table** and **join
+      it/them with the foreign key(s) of the child table**. 
+
+
+      * You must ensure that the data type of the linking fields is the same. 
+
+
+      <image>
+    languageId: markdown
+  - kind: 1
+    value: >-
+      **Syntax**
+
+
+      ```Syntax
+
+      SELECT columnName FROM tableName
+
+      ```
+
+
+      The FROM clause is now a bit more complex. Besides listing the data
+      sources (tables) it now contains also the syntax specifying how to link
+      the different data sources together. Note that the inner keyword is
+      optional, if not specified it is assumed that the join is an inner join.
+      Later on we see other types of joins. 
+
+
+      The important part is the ON clause which specifies how to link the table
+      together. In this clause you set the field(s) of the first table equal to
+      the field(s) of the second table. The search condition is very similar to
+      the search condition in a WHERE clause, it must return a logical true in
+      order to join to rows together. Keep in mind here that you must at least
+      specify one field from the first table and compare it with one field from
+      the other table. Typically, this is the primary key and the foreign key.
+
+
+      ### Example 4.2.1 using the INNER JOIN syntax
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT r.region_name, c.country_name
+      FROM regions r
+      INNER JOIN countries c ON r.region_id=c.REGION_ID
+      ORDER BY r.region_name;
+      -- EXPECTED RESULT: 25 rows selected.
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      As you have seen now with these examples, we use alias names for the
+      tables. This is very common, especially in multi-table queries since both
+      tables may contain fields with the same name (primary and foreign key for
+      example). In order to differentiate the different fields, we use these
+      short table aliases to refer to a table rather than using the long name.
+
+
+      **Syntax**
+
+
+      ```Syntax
+
+      SELECT columnName
+
+      FROM tableName AS aliasName LEFT(right)
+
+      JOIN tableName AS aliasName 
+          ON SearchCondition
+          USING coulmnName
+      ```
+
+
+      * To simplify the join condition, the SQL syntax allows simply specifying
+      on which common column you want to perform the join. 
+
+      This is where the `USING` keyword comes in. Simply list the tables in the
+      `FROM` clause and the key fields (primary and foreign) with the `USING`
+      keyword. 
+
+      * The field names must be the same in both tables.
+
+
+      > Note 
+
+      * you have to use parentheses to enclose the linking field(s). Also note
+      that you cannot use aliases on the linking field(s) as they refer to both
+      tables inside the using keyword.
+
+
+      Example 4.2.2: using INNER JOIN with USING keyword
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT r.region_name, c.country_name
+      FROM regions r
+      INNER JOIN countries c USING (Region_ID)
+      ORDER BY r.region_name;
+    languageId: oracle-sql
+  - kind: 2
+    value: ""
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      -- EXPECTED RESULT: 25 rows selected.
+
+
+      ### Example 4.2.3
+
+      Do not use a table alias in the `USING` keyword as the column contained
+      inside the parentheses is the common column from both tables to link on.
+      You will receive an error message when using a table alias. The error
+      message is shown below:
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT r.region_name, c.country_name
+      FROM regions r
+      INNER JOIN countries c USING (Region_ID)
+      ORDER BY r.region_name;
+      INNER JOIN countries c USING (c.Region_ID)
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The SQL syntax actually allows further simplifying this statement by using
+      the `NATURAL` keyword. This keyword simply identifies the common field
+      names in both tables and link the tables based on these fields.
+
+
+      Do not use the `ON` or `USING` keyword in conjunction with the `NATURAL`
+      keyword. This is an **implicit method** that requires further knowledge
+      about the tables and fields to understand this query. 
+
+
+      ### Example 4.2.4 using the NATURAL INNER JOIN syntax
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT r.region_name, c.country_name
+      FROM regions r NATURAL INNER JOIN countries c 
+      ORDER BY r.region_name;
+    languageId: oracle-sql
+  - kind: 1
+    value: >
+      ## Inner Joins on more than 2 tables
+
+
+      Although linking two tables is sufficient in many cases, in other cases
+      you have to join three or even more tables together. Now we have to embed
+      multiple joins in the FROM clause.  You simply add each additional table
+      including the ON clause  to an existing SQL statement.
+
+
+      **Syntax**
+
+
+      ```Syntax
+
+      SELECT coulmnName
+
+      FROM tableName INNER JOIN ON Search condition
+          tableName INNER JOIN tableName ON Search condition
+      ```
+
+
+      Now it is a good idea to organize your SQL statement, especially the FROM
+      clause. It is not uncommon to have 10 or more tables involved in a SQL
+      statement, especially for reports. Shown below is the basic idea of
+      structuring your SQL statement:
+
+
+      ```sql
+
+      SELECT 
+      	col1, col2, col3, …coln
+      FROM 
+      	table1 a
+      	INNER JOIN table2 b ON a.pk = b.fk
+      	INNER JOIN table3 c ON b.pk = c.fk
+      	INNER JOIN table4 d ON c.pk = d.fk
+      WHERE 
+      	condition(s)
+      ORDER BY 
+      	col1, col2;
+      ```
+
+
+      As you see, the SQL keywords stand out and the specifics of each clause
+      are indented.
+
+
+      ### Example 4.2.5 using multiple tables
+    languageId: markdown
+  - kind: 2
+    value: |-
+      COLUMN region FORMAT A20
+      COLUMN country FORMAT A20
+      SELECT
+          SUBSTR(r.region_name,1,20) region,
+          SUBSTR(c.country_name,1,30) country,
+          l.city, l.state_province
+      FROM region r
+          INNER JOIN countries c ON r.region_id = c.region_id 
+          INNER JOIN locations l ON c.country_id = l.country_id
+      WHERE
+          r.region_name LIKE 'A%'
+      ORDER BY 
+          r.region_name, c.country_name, l.city;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      > Note: 
+       For this particular SQL statement it is a good idea to set the following options:
+      COLUMN region FOMAT A20
+
+      COLUMN country FORMAT A30
+
+      Set pages 200
+
+      Set lines 200
+    languageId: markdown
+  - kind: 1
+    value: >-
+      ## 4.3 Outer Join
+
+
+      The outer join enables the user to display all records from one table and
+      the matching records from the other table. Consider the simple example of
+      a parent/child table. It is possible, and in fact very likely that there
+      are parent records without having children (of course this is a matter of
+      the cardinality of the relationship). However, it is not very likely to
+      have children records without having a parent record. These records are
+      called orphan records.
+
+
+      The purpose of the outer join queries is to find parent records that do
+      not have child records and also to find orphan records.
+
+
+      <image>
+
+
+      The equi-join will cover the gray area, the intersection of both entities
+      of students and classes. The left and right outer join will cover the
+      white areas, accepted students not enrolled yet and scheduled classes
+      without any enrollments.
+
+
+      The old SQL syntax (SQL 89) already supported outer joins. Remember, the
+      join was performed in the WHERE clause. Using a plus (+) sign on either
+      side of the WHERE condition would indicate that if no records match on
+      this side to simply use Nulls to fill in the blanks!
+
+
+      The new SQL syntax (SQL 92/99) uses the keywords OUTER join (or LEFT
+      OUTER/RIGHT OUTER) join in the FROM clause of the SELECT statement. Left
+      and right merely refers to the position of the table listed in the FROM
+      clause. The first table is the left table, the second one is the right
+      table.
+
+
+      **Syntax**
+
+
+      ```Syntax
+
+      SELECT columnName
+
+      FROM talbeName AS aluas Name left(right)
+
+      JOIN tableName AS aliasName ON Search Condition
+                                  USING columnName;
+      ```
+    languageId: markdown
+  - kind: 1
+    value: "### Example 4.3.1 using a LEFT OUTER JOIN syntax: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city
+      FROM countries c
+          LEFT OUTER JOIN locations l ON c.country_id = l.country_id;
+
+      -- EXPECTED RESULTS: 34 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 4.3.2 using SQL 89 OUTER JOIN syntax: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city
+      FROM countries c, locations l
+          WHERE c.country_id = l.country_id(+);
+
+      -- EXPECTED RESULTS: 34 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      This example shows the current SQL `OUTER JOIN` syntax as well as the old
+      syntax. The only reason it is shown here that you will still find lots of
+      code using the old syntax for years to come. It is a good idea to at least
+      know the syntax so that you will be able to understand the SQL statement.
+
+
+      The plus sign indicates the table having no matching records. So if the
+      plus sign is on the left side, it is a `RIGHT OUTER JOIN`, it is on the
+      right side (as in the above example), then it is a `LEFT OUTER JOIN`.
+
+
+      To find countries only that currently have no location associated with it
+      use the `IS NULL` predicate for a column of the table where the data is
+      missing. Make sure to use a column that does not allow for `NULL` values,
+      such as primary key or any other column having the `NOT NULL` constraint.
+
+
+      ### Example 4.3.3 using the IS NULL predicate: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city,
+          l.location_id,
+          l.state_provine
+      FROM 
+          countries c
+      LEFT OUTER JOIN 
+          locations l ON c.country_id = l.country_id
+      WHERE
+          l.city IS NULL
+          ORDER BY
+              c.country_name;
+      -- EXPECTED RESULTS: 11 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      A situation is to look out for in outer joins: You cannot constrain (WHERE
+      clause) the data on the side where the data is missing, you will loose the
+      “outer join” 
+
+
+      ### Example 4.3.4 using a condition on an outer join
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city
+      FROM 
+          countries c
+      LEFT OUTER JOIN 
+          locations l ON c.country_id = l.country_id
+      WHERE
+          l.city LIKE 'B%'
+          ORDER BY
+              c.country_name;
+      -- EXPECTED RESULTS: 3 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The outer join is performed and then you ask for cities starting with a
+      ‘B’.
+
+
+      To preserve the `OUTER JOIN` when using the additional constraint, make
+      sure to include `IS NULL` on the key column of the table of the missing
+      side. The reason for using the key column is that other columns could
+      potentially contain null values, that means there is no missing row, just
+      the column value happens to be null.
+
+
+      ### Example 4.3.5 preserving an outer join when using a condition
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city
+      FROM 
+          countries c
+      LEFT OUTER JOIN 
+          locations l ON c.country_id = l.country_id
+      WHERE
+          l.city LIKE 'B%'OR l.location_id IS NULL
+          ORDER BY
+              c.country_name;
+      -- EXPECTED RESULTS: 14 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: |-
+      **Syntax** 
+      > for the outer join on more than two tables
+
+      ```Syntax
+      SELECT DISTINCT columnName
+      FROM talbeName INNER      JOIN tableName ON Search condtion
+                     left
+                     right OUTER 
+
+          INNER     JOIN tableName ON Search condtion
+              LEFT
+              RIGHT OUTER;
+      ```
+    languageId: markdown
+  - kind: 1
+    value: >-
+      In this situation you may use parentheses to indicate the order of
+      precedence. Depending on the data, it may make a difference whether you
+      first perform an inner join and then an outer join or vice versa.
+
+
+      ### Example 4.3.6 using an inner and outer join and parentheses to
+      indicate order of processing
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city,
+          d.department_name
+      FROM 
+          (countries c
+      LEFT OUTER JOIN 
+          locations l ON c.country_id = l.country_id)
+      INNER JOIN departments d ON d.location_id=l.location_id
+          ORDER BY
+              c.country_name, l.city;
+      -- EXPECTED RESULTS: 27 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * The `JOIN` inside the parentheses is processed first (tables countries
+      and locations). 
+
+      * Then an `INNER JOIN` is performed (table departments). 
+
+      * Take a look at the last join, it is performed on location_id. 
+
+      * The `location_id` of table locations may contain `NULL` values (although
+      it is a primary key!) because it is used in an outer join with table
+      countries. Therefore, the last `INNER JOIN` will eliminate all `OUTER
+      JOIN` records of the table location because there is no match possible on
+      a `NULL` value.
+
+
+      ### Example 4.3.7 using an inner and outer join and parentheses to
+      indicate order of processing:
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          c.country_name,
+          l.city,
+          d.department_name
+      FROM 
+          countries c
+      LEFT OUTER JOIN 
+          (locations l INNER JOIN departments d ON d.location_id=l.location_id)
+      ON c.country_id = l.country_id
+      ORDER BY
+              c.country_name, l.city;
+      -- EXPECTED RESULTS: 48 rows selected
+    languageId: oracle-sql
+  - kind: 1
+    value: As you can see, the result is different depending on how you group your
+      joins. The previous example first joined the countries and the locations
+      as an outer join, then equi-joined the result with the departments.
+      Therefore, since the final join is an equi-join no “Null” records in the
+      Locations table are displayed. This example first equi-joined and then
+      outer-joined the tables, therefore “Null” records from the Locations table
+      are displayed.
+    languageId: markdown
+  - kind: 1
+    value: "## 4.4 Self-Join"
+    languageId: markdown
