@@ -1,0 +1,755 @@
+cells:
+  - kind: 1
+    value: >
+      ## 5.1 Aggregate Functions 
+
+
+      > still DQL, we are not changing the data at all). We will now manipulate
+      Data in memory and the persitent data stored in the database remains
+      untouched. 
+
+
+      * most of these functions are vendor specific and not part of the SQL
+      standard. 
+
+      * following functions are part of the SQL standard and exist across
+      different database platforms:
+        * **Count**: Count the number of non-null records
+        * **Sum**:	Summarize numeric data
+        * **Avg**:	Calculate the mean or average of numeric data
+        * **Max**:	The maximum value of numeric, date/time, or character data
+        * **Min**:	The minimum value of numeric, date/time, or character data
+
+      Many database vendors add additional aggregate functions, such as `StdDev`
+      (standard deviation), `Var` (variance), First, and Last.
+    languageId: markdown
+  - kind: 1
+    value: "### Example 5.5.1 using multiple aggregate functions: "
+    languageId: markdown
+  - kind: 1
+    value: |-
+      * ealiest hire date: `MIN(hire_date)` 
+      * latest hire date: `MAX(hire_date)`
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT COUNT(employee_id),
+      SUM(salary),
+      MIN(hire_date), 
+      MAX(hire_date),
+      AVG(salary)
+      FROM employees;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      Next, combining multiple aggregate functions together as shown in this
+      expressions.
+
+
+      ### Example 5.1.2a using a calculated expression with aggregate functions
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT SUM(salary)/COUNT(employee_ID), AVG(salary)
+      FROM employees;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Example 5.1.2b same for managers"
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT SUM(salary)/COUNT(manager_ID), AVG(salary)
+      FROM employees;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      
+      Since one row in the `employees` table contains a `NULL` value in the
+      `manager_id` column, 
+
+      the calculated average deviates from the `AVG` function as the `AVG`
+      function calculates the average based on 107 rows (since salary does not
+      contain a `NULL` value) 
+
+      whereas the count(`manager_id`) yields only 106 records.
+
+
+      **Restrictions**
+
+
+      There are a few restrictions regarding using multiple aggregate functions
+      according to standard SQL:
+
+
+      * **1**. You cannot nest one aggregate function into another one: (Oracle
+      makes an exception here, see later example)
+
+
+      ```sql
+
+      (Sum(Min(column_name))
+
+      ```
+
+
+      * **2**. You cannot use a SQL subquery as a source for an aggregate
+      expression: 
+
+
+      ```sql
+
+      Sum(subquery)
+
+      ```
+
+
+      However, you can use other SQL predicates inside an aggregate function as
+      shown in the next example.
+
+
+      ### Example 5.1.3 using an aggregate function on a distinct column
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT COUNT(salary), COUNT(DISTINCT salary)
+      FROM employees;
+      SELECT AVG(salary), AVG(DISTINCT Salary)
+      FROM employees;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ### `WHERE` clause with aggregate function
+
+      * performed over the entire table, meaning all records in a given table
+      are counted or summarized.
+
+      * `WHERE` clause can help to limit th number of records for the
+      aggregation process. 
+
+
+      ```syntax
+
+      SELECT column1, column2, ...
+
+      FROM table_name
+
+      WHERE condition;
+
+      ```
+
+
+      * At this point the aggregate calculations are performed over the entire
+      table, meaning all records in a given table are counted or summarized. 
+
+      * However, we can use the `WHERE` clause of the SQL statement to limit the
+      number of records for the aggregation process.
+
+
+      ### Example 5.1.4a using a WHERE clause and an aggregate function
+    languageId: markdown
+  - kind: 2
+    value: |+
+      SELECT AVG(salary) "Average Salary"
+      FROM employees
+      WHERE job_ID='ST_CLERK';
+
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * data is fetched from the data base and the `WHERE` clause is applied
+      before the aggregation is takes place.
+
+      * then 
+
+
+      ### Check for understanding
+
+      1. what are the examples of aggregate functions?
+
+      2. when using an aggregated function on a column over the entore table,
+      how many ouput records will you receive?
+
+      3. How do you perform an aggregated calculation over a subset of a table?
+    languageId: markdown
+  - kind: 1
+    value: >-
+      ## 5.2 Grouping Data
+
+      * So far we have seen how to calculate aggregates across 
+        * **all rows** in a table or 
+        * by using a `WHERE` clause for **some rows** in a table. 
+      * The concept of grouping data is to **divide the rows** in a table or
+      query **into sub groups** and calculate aggregates within each group.
+
+
+      ### `GROUP BY` clause
+
+      * The new keyword `GROUP By` of a `Select` statement partitions a table
+      into groups. 
+
+      * A partition of a set divides the set into subsets such that the union of
+      the subsets returns the original set. 
+
+
+      [image]()
+
+
+      Imagine a pumpkin pie and cutting up into pieces; each piece represents a
+      partition
+
+
+      * The intersection of the subsets is empty. Imagine a pumpkin pie and
+      cutting it up into pieces. 
+
+      * Each piece represents a partition, and when you put all pieces together
+      you have the full pumpkin pie.
+
+
+      The `GROUP BY` clause takes the result of the `FROM` and `WHERE` clauses
+      and arranges the rows into groups defined as having the same values for
+      the columns listed in the `GROUP BY` clause. 
+
+      * Each group is reduced to a single row in the resulting set. 
+
+
+      **Syntax**
+
+
+      ```syntax
+
+      SELECT column_name(s)
+
+      FROM table_name
+
+      WHERE condition
+
+      GROUP BY column_name(s)
+
+      ORDER BY column_name(s);
+
+      ```
+
+
+      * For example: to find out how many employees exist in each job title.
+
+
+      [image]()
+
+
+
+      If the grouped fields contain `NULL` values, all null values are arranged
+      into one group as if they were all equal. This is not necessarily true, as
+      some `NULL` values become specific values at some point and then fall into
+      either an existing group or form a new group.
+
+
+      The following example shows the number of employees by `job_id` based on
+      the table `employees`.
+
+
+      ### Example 5.2.1 using a `GROUP BY` clause 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT job_id, COUNT(employee_id) AS "Count of Employees"
+      FROM employees
+      GROUP BY job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The complete `SELECT` statement including the GROUP BY clause
+
+      **Syntax**
+
+
+      ```syntax
+
+      SELECT DISTINCT Value expression AS Alias
+
+      FROM Table
+
+      WHERE search condition
+
+      GROUP BY column_reference
+
+      ORDER BY column_reference;
+
+      ```
+
+
+      ### Rules for the `GROUP BY` clause in conjunction with aggregate
+      functions:
+
+      * Using `DISTINCT` causes the aggregate function to consider only
+      non-duplicates
+
+      * The data type for aggregate functions is text, number, or date
+
+      * All aggregate functions ignore `NULL` values, use the `NVL` function to
+      **substitute `NULL` values** if required
+
+      * Use the `ORDER BY` clause to set the desired sort order, which is
+      according to SQL standard.
+
+
+      Two examples to understand the `NULL` value issue. 
+
+      * Remember, the commission percentage column in the employee table only
+      applies to a certain number of records, for all other records it is
+      `NULL`.
+
+
+      ### Example 5.2.2 using the AVG function on a column with `NULL` values
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT AVG(commission_pct) Avg_comm_pct
+      FROM EMPLOYEES;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ### Example 5.2.3 using the NVL function inside an aggregate function
+
+      * considering all 107 records to calculate the AVG.
+
+      * changing the NULL value into zero and therefore allow the AVG to
+      recognize it.
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT AVG(NVL(commission_pct, 0)) Avg_comm_pct_Null
+      FROM EMPLOYEES;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The two results are different. 
+
+      * In the first example the avg function only considers those columns with
+      an actual value and dismisses all other rows. 
+
+      * In the second example all rows are considered for the avg calculation,
+      therefore, the average is much smaller.
+
+
+      ### Rules for `SELECT` statement using `GROUP BY`
+
+
+      When using `GROUP BY` to divide your data into smaller groups, consider
+      the following rules:
+
+      * You must list columns in the `SELECT` statement that are not included in
+      an aggregate function in the `GROUP BY` clause (non-aggregate columns must
+      be listed in GROUP BY clause)
+
+      * On the other hand, you may list columns in the `GROUP BY` clause and not
+      list them in the `SELECT` clause in other words: the reverse is not true:
+      `GROUP BY` clause columns do not need to be listed in `SELECT` clause.
+
+      * WHERE clause allows you to filter rows before grouping of data takes
+      place
+
+      * You cannot use column aliases in the `GROUP BY` clause (due to
+      processing order of SQL statement)
+
+
+
+      Take a look at the following example for errors when using GROUP BY
+      clauses.
+
+
+      ### Example 5.2.4 using an aggregate function and non-aggregate column
+      without a `GROUP BY` clause (demostrating the error messag)
+    languageId: markdown
+  - kind: 2
+    value: |
+      SELECT department_id, AVG(NVL(commission_pct, 0))
+      FROM EMPLOYEES;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      The example above shows 
+
+      * the commission percentage is aggregated using the AVG function. But the
+      department_ID is not.
+
+      * Aggregation compresses rows into one or more values if a `GROUP BY`
+      clause is used. 
+
+      * the `department_id` in the `SELECT` clause, not aggregated nor grouped,
+      Hence all values should be displaced/displayed. This is in conflict with
+      the aggregated column and therefore, an error message is displayed
+
+      Again, 
+
+      * This column is not aggregated nor included in a `GROUP BY` statement.
+      Therefore, the error message is displayed.
+
+
+      On the other hand, you may include grouping of data in the `GROUP BY`
+      clause and not list in the `SELECT`. 
+
+      * This will cause the query to divide the data into the groups but it will
+      not display the group values in the final output. In general this is not
+      very usefull. But is is applied when a subquerry is use as a filter
+      expression foe the main query, which is covered in one of the future
+      chapters.
+
+
+      ### Example 5.2.5 using a GROUP BY column not listed in SELECT
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT AVG(NVL(commission_pct, 0))
+      FROM EMPLOYEES
+      GROUP BY department_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      You see now we only see the aggregated values subdivided into some groups
+      but we really cannot see group value. 
+
+
+      ---
+
+
+      * You can use multiple columns in the `GROUP BY` clause.  
+
+      * The order of the GROUP BY columns has no bearing on the aggregate
+      results. 
+
+      * To achieve the desired output, use the `ORDER BY` clause to sort the
+      grouped aggregate calculations. 
+        * For example, we would like to see the average salary grouped by department and `job_id`  and sorted by `department_id` and `job_id` for departments 80, 100, and 110.
+
+      ### Example 5.2.6 using multiple GROUP BY and ORDER BY columns
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, AVG(salary)
+      FROM EMPLOYEES
+      WHERE department_ID IN (80, 100,110)
+      GROUP BY department_id, job_id
+      ORDER BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: this example will be slightly modified.
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, AVG(salary)
+      FROM EMPLOYEES
+      WHERE department_ID IN (80, 100,110)
+      GROUP BY job_id, department_id 
+      ORDER BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      As you can see in this example, the order of the `GROUP BY` columns has no
+      bearing on the calculated, aggregated data.
+
+
+      And of course, you can **list multiple aggregate calculations in your
+      query**, as shown in the following example. 
+
+      * Just make sure that any column listed in the SELECT clause and not
+      aggregated is listed in the GROUP BY clause.
+
+
+      ### Example 5.2.7 using multiple aggregate columns:
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, MIN(salary), AVG(salary), MAX(salary)
+      FROM EMPLOYEES
+      WHERE department_ID IN (80, 100,110)
+      GROUP BY department_id, job_id
+      ORDER BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      * When **grouping** data, the database simply collects all rows having the
+      same values in the `GROUP BY` clause. 
+
+      * The **sorting** operation is a separate process, which actually requires
+      more memory and/or disc space as the database has to either use an index
+      or scan through the entire table and create a temporary table to store the
+      sorted set.
+
+
+      ***
+
+
+      ### Calculated Experssion in `GROUP BY`
+
+
+      You can also group on expressions, this allows you to customize your query
+      in a very specific way based on certain business rules, for example. The
+      only restriction here is that you have to **list the expression in the
+      SELECT clause as well as in the GROUP BY clause**. 
+
+      * This is due to the fact that the `GROUP BY` is processed before the
+      `SELECT` clause, therefore you cannot simply reference a column in the
+      `SELECT` clause by an alias because using aliases in the `GROUP BY` clause
+      is not allowed. 
+
+      * To get around this limitation, you have to use a subquery, which we will
+      cover in the next chapter.
+
+
+      ### Example 5.2.8 using a calculated expression in GROUP BY clause
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT CASE 
+      WHEN 
+          salary < 5000 
+      THEN 
+          'Low Income' 
+      ELSE 
+          'High Income' 
+      END,
+      COUNT(employee_id)
+      FROM 
+          EMPLOYEES
+      GROUP BY CASE 
+      WHEN 
+          salary < 5000 
+      THEN 
+          'Low Income' 
+      ELSE 'High Income' 
+      END;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ### Check for understanding
+
+      1. What is the GROUP BY` clause used for?
+
+      2. Describe how NULL Values are treated by the GROUP BY clause. 
+
+      3. Describe the rule about listing non-aggregate columns in the SELECT
+      clause and in the GROUP BY clause. 
+
+      4. When using a calculated ezpression in the GROUP BY clause, how do you
+      reference/display the expression in the SELECT clause?
+
+
+      ---
+
+
+      ## 5.3 Filtering Grouped Data
+
+      By now you have a pretty good idea what aggregating of data means and how
+      to use the Group By clause in conjunction with aggregate functions. 
+
+
+      The last piece in the puzzle is filtering of data when aggregating and
+      grouping data. There are three different kinds of situations:
+
+      * Filtering the data before grouping and aggregating on a column
+      (non-SELECT) not part of the aggregate query (done in `WHERE` clause)
+
+      * Restricting the number of groups by using a filter for `GROUP BY`
+      columns (`WHERE`)
+
+      * Limiting the output for an aggregate result by using a filter for the
+      aggregated column (`HAVING`)
+
+
+      Let us consider the first situation by using the `WHERE` clause to filter
+      the data on a column that is not part of the query. It is always desirable
+      to **limit the number of rows before the aggregation** of data.
+
+
+      ### Example 5.3.1a using a WHERE condition in a GROUP BY query
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, AVG(salary)
+      FROM EMPLOYEES
+      WHERE hire_date BETWEEN '1-jan-95' AND '31-dec-1998'
+      -- hire date is not part of the SELECT clause
+      GROUP BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: "Example 5.3.1b commenting out the WHERE clause: "
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, AVG(salary)
+      FROM EMPLOYEES
+      -- WHERE hire_date BETWEEN '1-jan-95' AND '31-dec-1998'
+      GROUP BY department_id, job_id
+      -- ORDER BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      As you can see from the previous example, the result is quite different. *
+      The data for both queries are different, therefore the aggregation of the
+      data leads to different results. 
+
+      * Also note the syntax for commenting out a SQL line, the double hyphen
+      (--).
+
+
+      Now the next example demonstrates the `WHERE` clause being applied on a
+      `Group By` column. 
+
+      * Again, the `WHERE` clause causes the data to be filtered before the
+      grouping and aggregation of data.
+
+
+      ### Example 5.3.2 using a criteria against a GROUP BY column: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, AVG(salary)
+      FROM EMPLOYEES
+      WHERE department_id IN (110,100,80)
+      GROUP BY department_id, job_id
+      ORDER BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >+
+      As you can see from the two previous examples, the **`WHERE` clause
+      filters the data before the data is being processed** for the end result.
+
+
+      ***
+
+       This is important because in the next example we will take a look at the last situation for **filtering the data, after everything is being processed**. A new keyword is being introduced, the so-called `HAVING` clause.
+
+      The `HAVING` clause is used to **restrict the number of rows after the
+      aggregation** of data. Therefore, the `HAVING` clause can be **used only
+      on those columns that are being aggregated**.
+
+
+      **Syntax**
+
+
+      ```syntax
+
+      SELECT DISTINCT Value expression AS
+
+      FROM table
+
+      GROUP BY column HAVING search condition
+
+      ORDER BY column;
+
+      ```
+
+
+      As you can see from this diagram, the `HAVING` clause comes after the
+      `GROUP BY` clause. 
+
+      * Although the order in the SELECT statement does not indicate the order
+      of processing, in this case it is true. 
+
+      * The `HAVING` clause is processed **after** the `GROUP BY` and all
+      aggregate functions are processed.
+
+
+      Although it is also possible to place the `HAVING` clause **before the
+      `GROUP BY` clause**, logically it is better to **use GROUP BY first and
+      then HAVING**. 
+
+      * This is just semantics, this does not necessarily represent the order in
+      which these parts of the `SELECT` statement are processed.
+
+
+      ### Example 5.3.3 using a HAVING clause: 
+
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT department_id, job_id, AVG(salary)
+      FROM EMPLOYEES
+      GROUP BY department_id, job_id
+      HAVING AVG(salary) > 10000
+      ORDER BY department_id, job_id;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      As you can see from this example, the aggregation of data has to take
+      place first before we can apply the criterion that only returns rows with
+      an average salary of greater than 10000 are displayed. 
+
+      * This is not very efficient for the database as the database must
+      calculate all aggregation rows before it can figure out which rows are
+      greater than 10000 and which ones are less.
+
+
+      ### Order of processing in a SQL SELECT statement. 
+
+
+      * This is important to understand in order to write better and more
+      efficient SQL as well as avoiding common errors. 
+
+      * The order of the individual clauses in a SQL SELECT statement does not
+      reflect the order of processing. \
+
+      * The order of processing is as follows:
+          1. `FROM` clause (to get to the source data)
+          2. `WHERE` clause (to apply possible filters)
+          3. `GROUP BY` clause
+          4. `HAVING` clause (filter on aggregated columns)
+          5. `SELECT` clause
+          6. `ORDER BY` clause (once all the data is ready it is time for sorting)
+
+       Note: The ON clause in the FROM clause and the WHERE clause are essentially a search condition and maybe processed in a mixed order depending on the actual data.
+
+      Now we understand that **we cannot use an expression in the `SELECT`
+      clause and simply reference it by the column alias in the `GROUP BY`
+      clause, for example. 
+
+      * The `SELECT` clause is not processed yet when the `GROUP BY` clause is
+      being processed. 
+
+      * The same is true for the `WHERE` clause. For that very reason, we must
+      use subqueries to first build the complex expressions, use the subquery in
+      the `FROM` clause as the datasource, and then use the `GROUP BY` and/or
+      `WHERE` clause in the outer query.
+
+
+      Based on the processing order, you can see that we should be able to use
+      complex expressions in the SELECT clause in the ORDER BY clause simply by
+      referencing the column alias.
+
+
+      ### Example 5.3.4 using column alias in ORDER BY clause: 
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT employee_id,
+      CASE WHEN salary < 5000 
+      THEN 
+          'Low Income' 
+      ELSE 
+          'High Income' 
+      END Income_Cat, Salary
+      -- alias the column as Income_Cat, Salary
+      FROM 
+          EMPLOYEES
+      ORDER BY Income_Cat DESC;
+      -- referencing the alias here for sorting
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      Notice that we simply used the column alias Income_Cat in the ORDER BY
+      clause.
+
+
+      ### Check for undersanding
+
+
+      1. For filtering pupose, name the 3 differnt categories of columns in an
+      aggregate query
+
+      2. What is the difference between the WHERE and the HAVIN clause?
+
+      3. On which type of coulmn category do you use the `HAVING` clause for
+      filtering purpose?
+
+      4. List the order SQL processing of the main clauses.
+    languageId: markdown
