@@ -1,0 +1,324 @@
+cells:
+  - kind: 2
+    value: |-
+      SELECT
+          'Sales Employees' AS emp_category,
+          TO_CHAR(hire_date, 'YYYY') AS hire_year,
+          AVG(salary) AS avg_salary
+      FROM
+          employees
+      WHERE
+          commission_pct IS NOT NULL
+          AND hire_date > DATE '1997-12-31'
+      GROUP BY
+          TO_CHAR(hire_date, 'YYYY')
+
+      UNION ALL
+
+      SELECT
+          'Non-Sales Employees' AS emp_category,
+          TO_CHAR(hire_date, 'YYYY') AS hire_year,
+          AVG(salary) AS avg_salary
+      FROM
+          employees
+      WHERE
+          commission_pct IS NULL
+          AND hire_date > DATE '1997-12-31'
+      GROUP BY
+          TO_CHAR(hire_date, 'YYYY')
+
+      ORDER BY
+          hire_year,      
+          emp_category;   
+          -- sorts by 'Sales' or 'Non-Sales' within each year
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## Problem 1
+
+      * Display the job_id, minimum, average, and maximum salary of employees
+      `by job_id` (WHERE?). 
+        * to calculate aggregate functions (MIN, AVG, MAX) for salary and show the grouping column (job_id) alongside them.
+        * Translation: In SQL, whenever you calculate an aggregate function on a column (like AVG(salary)) and you want to see the results broken down for each distinct value of another column (like job_id), you must use the GROUP BY clause. Clause: GROUP BY job_id
+      * Filter the resulting data set by job_id values starting with A or S. 
+        * Action: You are restricting which individual rows from the original table will be included in the calculation/grouping process. This is a row-level filter.
+        * Translation: This requires the WHERE clause, using the LIKE operator to match the pattern.
+        * Clause: WHERE job_id LIKE ’A%’ OR job_id LIKE ’S%’
+      * Order the resulting set by average salary.
+        * Action: You are sorting the final result set (the output of the aggregates).
+        * Translation: This requires the ORDER BY clause, referencing the aggregate function you calculated.
+        * Clause: ORDER BY AVG(salary)
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT job_id, MIN(salary), AVG(salary) avg_sal, MAX(salary)
+      FROM employees 
+      WHERE job_id LIKE 'A%'
+      GROUP BY job_id
+      ORDER BY avg_sal 
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## Problem 2 (CASE expression for categorization and then a GROUP BY for
+      aggregation.)
+
+
+      Using table jobs, categorize the max_salary column using the following
+      rules:
+
+      * Max_salary is less than 10000 → ‘Low max salary’
+        * Action: You need to check the value of the max_salary column against multiple conditions and assign a text label based on which condition is met.
+        * Translation: This is the job of the CASE expression in SQL. It evaluates conditions sequentially.
+        * Clause: CASE WHEN (for the rules) and AS max_sal_cat (for the alias).
+      * Max_salary is less than 20000 → ‘Medium max salary’
+
+      * Max_salary is equal to or greater than 20000 → ‘High max salary’
+
+
+      * Using the above logic, count the number of job records within each
+      category of this max_salary column. 
+
+      * Alias the count column with cnt_job and the categorized max_salary
+      column as max_sal_cat. 
+        * Action: You are counting records (COUNT(*) or COUNT(job_id)) and breaking that count down for each distinct category you just created.
+        * Translation: This combines an aggregate function (COUNT) with the GROUP BY clause, applied to the new category column.
+        * Clause: COUNT(*) AS cnt_job (for the aggregation/alias) and GROUP BY the CASE expression.
+      * Sort the result by the count in descending order.
+
+      * Hint: First create a SELECT query designing the expression to categorize
+      the max_salary column. Then perform the aggregation.
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+          -- 1. Categorize max_salary and alias it
+          CASE
+              WHEN max_salary < 10000 THEN 'Low max salary'
+              WHEN max_salary < 20000 THEN 'Medium max salary'
+              ELSE 'High max salary'
+          END AS max_sal_cat,
+          
+          -- 2. Count the records within each category and alias it
+          COUNT(*) AS cnt_job
+      FROM
+          jobs
+      GROUP BY
+          -- Must group by the categorized column (the full CASE expression)
+          CASE
+              WHEN max_salary < 10000 THEN 'Low max salary'
+              WHEN max_salary < 20000 THEN 'Medium max salary'
+              ELSE 'High max salary'
+          END
+      ORDER BY
+          -- 3. Sort by the count in descending order
+          cnt_job DESC;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## Problem 3:
+
+      * Calculate AVG min_salary (alias avg_min_sal) and AVG max_salary (alias
+      avg_max_sal) values 
+        * from table jobs 
+        * by the first two letters of the job_id column. 
+      * Alias the expression of the first two letters as job_cat. 
+
+      * Sort the resulting set by the avg_max_sal expression in descending
+      order.
+    languageId: markdown
+  - kind: 1
+    value: |-
+      Focus on the String Function (SUBSTR)
+
+      * The key to this problem is using the `string extraction function`. 
+
+      ```syntax
+      SUBSTR(string,start_position,length)
+
+      string = job_id
+
+      start_position = 1 (Start at the very beginning of the string)
+
+      length = 2 (Take two characters from that starting point)
+      ```
+
+      Example: If job_id is 'IT_PROG', then SUBSTR(’IT_PROG’,1,2) returns 'IT'.
+    languageId: markdown
+  - kind: 2
+    value: >-
+      SELECT
+          -- 1. Extract the first two letters and alias the expression
+          SUBSTR(job_id, 1, 2) AS job_cat,
+          
+          -- 2. Calculate the required averages and apply aliases
+          AVG(min_salary) AS avg_min_sal,
+          AVG(max_salary) AS avg_max_sal
+      FROM
+          jobs
+      GROUP BY
+          -- Must group by the categorized column, which is the extraction expression
+          SUBSTR(job_id, 1, 2)
+          -- Alternatively, if your SQL dialect supports it, you can GROUP BY the alias: GROUP BY job_cat
+      ORDER BY
+          -- 3. Sort by the average max salary in descending order
+          avg_max_sal DESC;
+    languageId: oracle-sql
+  - kind: 1
+    value: >
+      ## Problem 4 
+
+      (two different types of filtering: a row-level filter (WHERE) and a date
+      extraction function (YEAR or EXTRACT) for grouping.)
+
+
+      **Part 1**: 
+
+      Create a query based on table employees displaying the following
+      columns/expressions:
+
+      * Literal value ‘Sales Employees’ using an alias of emp_category
+
+      * The year of the hire_date column using an alias of year
+
+      * The average salary using an alias of avg_salary
+
+
+      * Use the year as the GROUP BY value and filter the resulting set for
+      employees having a sales commission and for hire_dates after 1997.
+    languageId: markdown
+  - kind: 2
+    value: >-
+      SELECT
+          'Sales Employees' AS emp_category,
+          TO_CHAR(hire_date, 'YYYY') AS hire_year, -- Use TO_CHAR to extract the year
+          AVG(salary) AS avg_salary
+      FROM
+          employees
+      WHERE
+          commission_pct IS NOT NULL  -- row filtering: Filter for employees *having* a sales commission (NOT NULL)
+          AND hire_date > DATE '1997-12-31'  -- data filtering: Filter for hire_dates after 1997
+      GROUP BY
+          TO_CHAR(hire_date, 'YYYY')  -- Repeat the full expression for GROUP BY
+      ORDER BY
+          hire_year;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## Problem 4 Part 2: 
+
+
+      Create a similar query based on Part 1 except:
+
+      * Literal value ‘Non-Sales Employees’
+
+      * Filter the resulting set for employees having no sales commission and
+      for hire_dates after 1997.
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT 'Non-Sales Employees' emp_category,
+      TO_CHAR(hire_date, 'YYYY') hire_year,
+      AVG(salary) avg_salary
+      FROM employees
+      WHERE commission_pct IS NULL
+      -- filtering employees *having* no sales commission ( NULL)
+      AND hire_date > DATE '1997-12-31'
+      GROUP BY TO_CHAR(hire_date, 'YYYY')
+      ORDER BY hire_year;
+    languageId: oracle-sql
+  - kind: 1
+    value: "Problem 4 Part 3: Combine both queries using a UNION operator and sort
+      the resulting set by year and emp_category."
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT 'Sales Employees' AS emp_category,
+      TO_CHAR(hire_date, 'YYYY') AS hire_year,
+      AVG(salary) AS avg_salary
+      FROM employees
+      WHERE commission_pct IS NOT NULL
+      AND hire_date > DATE '1997-12-31'
+      GROUP BY TO_CHAR(hire_date, 'YYYY')
+
+      UNION ALL
+
+      SELECT'Non-Sales Employees' AS emp_category,
+      TO_CHAR(hire_date, 'YYYY') AS hire_year,
+      AVG(salary) AS avg_salary
+      FROM employees
+      WHERE commission_pct IS NULL
+      AND hire_date > DATE '1997-12-31'
+      GROUP BY TO_CHAR(hire_date, 'YYYY')
+      ORDER BY
+      hire_year,
+      emp_category;
+      -- sorts by 'Sales' or 'Non-Sales' within each year
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## Problem 5:
+
+      * Display the job_id, manager_id, and average salary for employees having
+      a sales commission by job_id and manager_id. 
+
+      * Round the average salary to two decimal places and alias this column
+      average_sal. 
+
+      * Sort the resulting set by the rounded average salary in descending
+      order.
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+      job_id,
+      manager_id,
+      ROUND(AVG(salary), 2) AS average_sal
+      FROM
+      employees
+      WHERE
+      commission_pct IS NOT NULL
+      GROUP BY
+      job_id,
+      manager_id
+      ORDER BY
+      average_sal DESC;
+    languageId: oracle-sql
+  - kind: 1
+    value: >-
+      ## Problem 6:
+
+      * Count location records by region_name, country_name, and country_id
+      (display all grouped columns in SELECT clause). Alias the count as column
+      count_loc. 
+
+      * Display records only for country_id values of: US, DE, IT, UK, CA, NL
+      and for counts greater than 1. 
+
+      * Sort the resulting set by the count column in descending order and by
+      region_name in ascending order.
+    languageId: markdown
+  - kind: 2
+    value: |-
+      SELECT
+      r.region_name,
+      c.country_name,
+      l.country_id,
+      COUNT(l.location_id) AS count_loc
+      FROM
+      locations l
+      JOIN
+      countries c ON l.country_id = c.country_id
+      JOIN
+      regions r ON c.region_id = r.region_id
+      WHERE
+      l.country_id IN ('US', 'DE', 'IT')
+      GROUP BY
+      r.region_name,
+      c.country_name,
+      l.country_id
+      HAVING
+      COUNT(l.location_id) > 1
+      ORDER BY
+      count_loc DESC,
+      r.region_name ASC;
+    languageId: oracle-sql
